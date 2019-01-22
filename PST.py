@@ -100,7 +100,7 @@ def inorder_tree_walk_pointer(x):
                     break
 
 
-def test():
+def test_tree_walk():
     inorder_tree_walk_recursive(pst_demo)
     print('----------------')
     inorder_tree_walk_stack(pst_demo)
@@ -108,4 +108,26 @@ def test():
     inorder_tree_walk_pointer(pst_demo)
 
 
-test()
+def tree_search(x, key):
+    if not x:
+        return x
+
+    if x and x.key == key:
+        return x
+
+    if key < x.key:
+        return tree_search(x.left, key)
+    else:
+        return tree_search(x.right, key)
+
+
+def test_tree_search():
+    key = 10
+    result = tree_search(pst_demo, key)
+    if result:
+        print(result.key)
+    else:
+        print('could not find key: %s' % key)
+
+
+test_tree_search()
