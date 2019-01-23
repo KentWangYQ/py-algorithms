@@ -3,7 +3,7 @@
 
 class Node(object):
     """
-    PST Node 二叉搜索树结点
+    PST Node 结点
     """
     left = None
     right = None
@@ -21,7 +21,44 @@ class Node(object):
                 self.parent.right = self
 
 
-def create():
+class Tree(object):
+    def __init__(self, root=None):
+        self.root = root
+
+
+# 插入结点
+def tree_insert(t, z):
+    """
+    插入结点
+    :param t:
+    :param z:
+    :return:
+    """
+    assert t, 't can not be None'
+    if not t.root:
+        t.root = z
+        return t
+
+    x = t.root
+    y = None
+    while x:
+        y = x
+        if z.key < x.key:
+            x = x.left
+        else:
+            x = x.right
+
+    if z.key < y.key:
+        y.left = z
+    else:
+        y.right = z
+
+    z.parent = y
+    return t
+
+
+# 生成demo tree
+def create_tree(keys):
     """
     生成demo tree
          7
@@ -31,21 +68,23 @@ def create():
      2  6    9
     :return:
     """
-    keys = (key for key in [7, 5, 2, 6, 8, 9])
+    tree = Tree()
+    for key in keys:
+        tree_insert(tree, Node(key=key))
 
-    root = Node(key=next(keys))
-    n11 = Node(key=next(keys), parent=root, lor='left')
-    n21 = Node(key=next(keys), parent=n11, lor='left')
-    n22 = Node(key=next(keys), parent=n11, lor='right')
-    n12 = Node(key=next(keys), parent=root, lor='right')
-    n23 = Node(key=next(keys), parent=n12, lor='right')
+    # keys = (key for key in keys)
+    #
+    # root = Node(key=next(keys))
+    # n11 = Node(key=next(keys), parent=root, lor='left')
+    # n21 = Node(key=next(keys), parent=n11, lor='left')
+    # n22 = Node(key=next(keys), parent=n11, lor='right')
+    # n12 = Node(key=next(keys), parent=root, lor='right')
+    # n23 = Node(key=next(keys), parent=n12, lor='right')
 
-    return root
+    return tree
 
 
-pst_demo = create()
-
-
+# 中序遍历(递归)
 def inorder_tree_walk_recursive(x):
     """
     中序遍历(递归)
@@ -58,6 +97,7 @@ def inorder_tree_walk_recursive(x):
         inorder_tree_walk_recursive(x.right)
 
 
+# 中序遍历(堆栈)
 def inorder_tree_walk_stack(x):
     """
     中序遍历(堆栈)
@@ -77,6 +117,7 @@ def inorder_tree_walk_stack(x):
                 break
 
 
+# 中序遍历(非递归，非堆栈)
 def inorder_tree_walk_pointer(x):
     """
     中序遍历(非递归，非堆栈)
@@ -103,17 +144,10 @@ def inorder_tree_walk_pointer(x):
                     break
 
 
-def test_tree_walk():
-    inorder_tree_walk_recursive(pst_demo)
-    print('----------------')
-    inorder_tree_walk_stack(pst_demo)
-    print('----------------')
-    inorder_tree_walk_pointer(pst_demo)
-
-
+# 查询(递归)
 def tree_search(x, key):
     """
-    二叉搜索树查询(递归)
+    查询(递归)
     :param x:
     :param key:
     :return:
@@ -127,9 +161,10 @@ def tree_search(x, key):
         return tree_search(x.right, key)
 
 
+# 查询(迭代)
 def iterative_tree_search(x, key):
     """
-    二叉搜索树查询(迭代)
+    查询(迭代)
     :param x:
     :param key:
     :return:
@@ -143,9 +178,10 @@ def iterative_tree_search(x, key):
     return x
 
 
+# 最小值
 def tree_minimum(x):
     """
-    二叉搜索树最小值
+    最小值
     :param x:
     :return:
     """
@@ -154,9 +190,10 @@ def tree_minimum(x):
     return x
 
 
+# 最大值
 def tree_maximum(x):
     """
-    二叉搜索树最大值
+    最大值
     :param x:
     :return:
     """
@@ -165,16 +202,17 @@ def tree_maximum(x):
     return x
 
 
+# 后继
 def tree_successor(x):
     """
-    二叉搜索树后继
+    后继
     :param x:
     :return:
     """
     if not x:
         return x
     if x.right:
-        return tree_minimum(x)
+        return tree_minimum(x.right)
     y = x.parent
     while y and x != y.left:
         x = y
@@ -182,9 +220,10 @@ def tree_successor(x):
     return y
 
 
+# 前驱
 def tree_predecessor(x):
     """
-    二叉搜索树前驱
+    前驱
     :param x:
     :return:
     """
@@ -199,42 +238,59 @@ def tree_predecessor(x):
     return y
 
 
-def test_tree_search():
+# 子树替换
+def transplant(t, u, v):
     """
-    tree search test
+    子树替换
+    :param t:
+    :param u:
+    :param v:
     :return:
     """
-    key = 8
-    # result = tree_search(pst_demo, key)
-    result = iterative_tree_search(pst_demo, key)
-    if result:
-        print('result key: %s' % result.key)
+    assert u, 'u can not be None'
+
+    if not u.parent:
+        t.root = v
+    elif u == u.parent.left:
+        u.parent.left = v
     else:
-        print('result key: %s NOT FOUND' % key)
+        u.parent.right = v
 
-    minimum = tree_minimum(pst_demo)
-    if minimum:
-        print('minimum: %s' % minimum.key)
+    if v:
+        v.parent = u.parent
+
+    return t
+
+
+#  删除结点
+def tree_delete(t, z):
+    """
+    删除结点
+    三种情况：
+        1. 要删除的结点是叶子结点z，直接删除。
+        2. 要删除的结点是非叶子结点z，且只有一个子结点y，使用其左或右结点y替代该结点z。
+        3. 要删除的结点是非叶子结点z，且有两个子节点，这种情况比较复杂。
+            1. 获取z的后继y，y位于z的右子树中，并且没有左子结点。
+            2. y的右子结点替换y
+            3. y替换z
+    :param t:
+    :param z:
+    :return:
+    """
+    if not z.left:
+        transplant(t, z, z.right)
+    elif not z.right:
+        transplant(t, z, z.left)
     else:
-        print('Tree is None')
+        y = tree_successor(z)
+        if y != z.right:
+            transplant(t, y, y.right)
+            y.right = z.right
+            y.right.parent = y
 
-    maximum = tree_maximum(pst_demo)
-    if maximum:
-        print('maximum: %s' % maximum.key)
-    else:
-        print('Tree is None')
-
-    successor = tree_successor(pst_demo.left.right)
-    if successor:
-        print('Node 6\'s successor is: %s' % successor.key)
-    else:
-        print('Tree is None')
-
-    predecessor = tree_predecessor(pst_demo.left.right)
-    if predecessor:
-        print('Node 6\'s predecessor is: %s' % predecessor.key)
-    else:
-        print('Tree is None')
-
-
-test_tree_search()
+        transplant(t, z, y)
+        y.left = z.left
+        y.left.parent = y
+    if z == t.root:
+        t.root = y
+    return t
