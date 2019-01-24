@@ -1,87 +1,40 @@
 # coding=utf-8
 
-
-class Node(object):
-    """
-    PST Node 结点
-    """
-    left = None
-    right = None
-    parent = None
-
-    def __init__(self, key, data=None, parent=None, lor='left'):
-        self.key = key
-        self.data = data
-        if parent:
-            self.parent = parent
-
-            if lor == 'left':
-                self.parent.left = self
-            else:
-                self.parent.right = self
+from tree.node import Node
 
 
 class Tree(object):
-    def __init__(self, root=None):
+    def __init__(self, root=None, keys=None):
         self.root = root
+        if keys:
+            for key in keys:
+                self.insert_node(Node(key=key))
 
-
-# 插入结点
-def tree_insert(t, z):
-    """
-    插入结点
-    :param t:
-    :param z:
-    :return:
-    """
-    assert t, 't can not be None'
-    if not t.root:
-        t.root = z
-        return t
-
-    x = t.root
-    y = None
-    while x:
-        y = x
-        if z.key < x.key:
-            x = x.left
+    # 插入结点
+    def insert_node(self, z):
+        """
+        插入结点
+        :param z:
+        :return:
+        """
+        if not self.root:
+            self.root = z
         else:
-            x = x.right
+            x = self.root
+            y = None
+            while x:
+                y = x
+                if z.key < x.key:
+                    x = x.left
+                else:
+                    x = x.right
 
-    if z.key < y.key:
-        y.left = z
-    else:
-        y.right = z
+            if z.key < y.key:
+                y.left = z
+            else:
+                y.right = z
 
-    z.parent = y
-    return t
-
-
-# 生成demo tree
-def create_tree(keys):
-    """
-    生成demo tree
-         7
-        / \
-       5   8
-      / \   \
-     2  6    9
-    :return:
-    """
-    tree = Tree()
-    for key in keys:
-        tree_insert(tree, Node(key=key))
-
-    # keys = (key for key in keys)
-    #
-    # root = Node(key=next(keys))
-    # n11 = Node(key=next(keys), parent=root, lor='left')
-    # n21 = Node(key=next(keys), parent=n11, lor='left')
-    # n22 = Node(key=next(keys), parent=n11, lor='right')
-    # n12 = Node(key=next(keys), parent=root, lor='right')
-    # n23 = Node(key=next(keys), parent=n12, lor='right')
-
-    return tree
+            z.parent = y
 
 
 # 中序遍历(递归)

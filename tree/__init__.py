@@ -1,3 +1,3 @@
-from . import avl, pst
+from . import avl, bst
 
-__all__ = ['avl', 'pst']
+__all__ = ['avl', 'bst']
