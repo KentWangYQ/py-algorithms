@@ -13,11 +13,11 @@ class Tree(bstTree):
     def __init__(self, root=None, keys=None):
         super().__init__(root=root, keys=keys)
 
-    def insert_node(self, node):
-        super().insert_node(node)
-        self.root = self.rebalance()
-
     def rebalance(self):
+        """
+        再平衡，迭代使用转换操作，直到树达到平衡
+        :return:
+        """
         while True:
             bf = balance_factor(self.root)
             if abs(bf) < 2:
@@ -37,6 +37,24 @@ class Tree(bstTree):
                 else:
                     # rl_tree
                     self.root = left_right_rotate(self.root)
+
+    def insert_node(self, node):
+        """
+        插入新节点，且保持平衡
+        :param node:
+        :return:
+        """
+        super().insert_node(node)
+        self.rebalance()
+
+    def delete_node(self, node):
+        """
+        删除结点，且保持平衡
+        :param node:
+        :return:
+        """
+        super().delete_node(node)
+        self.rebalance()
 
 
 def node_height(node):

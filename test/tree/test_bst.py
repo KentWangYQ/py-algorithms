@@ -3,10 +3,21 @@
 import unittest
 from tree import bst
 
+""" demo tree
+         7
+        / \
+       5   8
+      / \   \
+     2  6    9
+"""
 demo_tree = bst.Tree(keys=[7, 5, 2, 6, 8, 9])
 
 
 class BSTTest(unittest.TestCase):
+    """
+    二叉搜索树测试
+    """
+
     def test_insert_node(self):
         """
         插入结点测试
@@ -66,9 +77,17 @@ class BSTTest(unittest.TestCase):
             print('Tree is None')
 
     def test_transplant(self):
+        """
+        结点替换测试
+        :return:
+        """
         new_tree = bst.transplant(demo_tree, demo_tree.root.left, bst.tree_successor(demo_tree.root.left))
         bst.inorder_tree_walk_recursive(new_tree.root)
 
-    def test_tree_delete(self):
-        new_tree = bst.tree_delete(demo_tree, demo_tree.root)
-        bst.inorder_tree_walk_recursive(new_tree.root)
+    def test_delete_node(self):
+        """
+        删除结点测试
+        :return:
+        """
+        demo_tree.delete_node(demo_tree.root)
+        bst.inorder_tree_walk_recursive(demo_tree.root)

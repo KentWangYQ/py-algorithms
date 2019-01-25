@@ -36,6 +36,37 @@ class Tree(object):
 
             z.parent = y
 
+    #  删除结点
+    def delete_node(self, z):
+        """
+        删除结点
+        三种情况：
+            1. 要删除的结点是叶子结点z，直接删除。
+            2. 要删除的结点是非叶子结点z，且只有一个子结点y，使用其左或右结点y替代该结点z。
+            3. 要删除的结点是非叶子结点z，且有两个子节点，这种情况比较复杂。
+                1. 获取z的后继y，y位于z的右子树中，并且没有左子结点。
+                2. y的右子结点替换y
+                3. y替换z
+        :param z:
+        :return:
+        """
+        if not z.left:
+            transplant(self, z, z.right)
+        elif not z.right:
+            transplant(self, z, z.left)
+        else:
+            y = tree_successor(z)
+            if y != z.right:
+                transplant(self, y, y.right)
+                y.right = z.right
+                y.right.parent = y
+
+            transplant(self, z, y)
+            y.left = z.left
+            y.left.parent = y
+            if z == self.root:
+                self.root = y
+
 
 # 中序遍历(递归)
 def inorder_tree_walk_recursive(x):
@@ -212,38 +243,4 @@ def transplant(t, u, v):
     if v:
         v.parent = u.parent
 
-    return t
-
-
-#  删除结点
-def tree_delete(t, z):
-    """
-    删除结点
-    三种情况：
-        1. 要删除的结点是叶子结点z，直接删除。
-        2. 要删除的结点是非叶子结点z，且只有一个子结点y，使用其左或右结点y替代该结点z。
-        3. 要删除的结点是非叶子结点z，且有两个子节点，这种情况比较复杂。
-            1. 获取z的后继y，y位于z的右子树中，并且没有左子结点。
-            2. y的右子结点替换y
-            3. y替换z
-    :param t:
-    :param z:
-    :return:
-    """
-    if not z.left:
-        transplant(t, z, z.right)
-    elif not z.right:
-        transplant(t, z, z.left)
-    else:
-        y = tree_successor(z)
-        if y != z.right:
-            transplant(t, y, y.right)
-            y.right = z.right
-            y.right.parent = y
-
-        transplant(t, z, y)
-        y.left = z.left
-        y.left.parent = y
-    if z == t.root:
-        t.root = y
     return t
