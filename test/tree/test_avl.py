@@ -14,7 +14,7 @@ from tree import bst, avl
     /
    1
 """
-demo_tree = bst.Tree(keys=[7, 5, 2, 1, 6, 8, 9])
+demo_tree = bst.BSTree(keys=[7, 5, 2, 1, 6, 8, 9])
 
 """ ll tree
          7
@@ -25,7 +25,7 @@ demo_tree = bst.Tree(keys=[7, 5, 2, 1, 6, 8, 9])
     /
    1
 """
-ll_tree = bst.Tree(keys=[7, 4, 3, 5, 1, 8])
+ll_tree = bst.BSTree(keys=[7, 4, 3, 5, 1, 8])
 
 """ rr tree
          7
@@ -36,7 +36,7 @@ ll_tree = bst.Tree(keys=[7, 4, 3, 5, 1, 8])
             / 
            12
 """
-rr_tree = bst.Tree(keys=[7, 4, 10, 8, 15, 12])
+rr_tree = bst.BSTree(keys=[7, 4, 10, 8, 15, 12])
 
 """ lr tree
          7
@@ -47,7 +47,7 @@ rr_tree = bst.Tree(keys=[7, 4, 10, 8, 15, 12])
         /   
        5
 """
-lr_tree = bst.Tree(keys=[7, 4, 2, 6, 5, 8])
+lr_tree = bst.BSTree(keys=[7, 4, 2, 6, 5, 8])
 
 """ rl tree
          7
@@ -58,7 +58,7 @@ lr_tree = bst.Tree(keys=[7, 4, 2, 6, 5, 8])
           / 
          9
 """
-rl_tree = bst.Tree(keys=[7, 4, 12, 10, 9, 14])
+rl_tree = bst.BSTree(keys=[7, 4, 12, 10, 9, 14])
 
 
 class AVLTest(unittest.TestCase):
@@ -127,8 +127,8 @@ class AVLTest(unittest.TestCase):
         再平衡测试
         :return:
         """
-        bst_tree = bst.Tree(keys=[7, 4, 12, 10, 9, 14])
-        t = avl.Tree(root=bst_tree.root)
+        bst_tree = bst.BSTree(keys=[7, 4, 12, 10, 9, 14])
+        t = avl.AVLTree(root=bst_tree.root)
         self.assertGreaterEqual(abs(avl.balance_factor(t.root)), 2, 'The tree has already balance!')
         t.rebalance()
         self.assertLess(abs(avl.balance_factor(t.root)), 2, 'The tree do NOT balance after rebalance!')
@@ -138,8 +138,8 @@ class AVLTest(unittest.TestCase):
         插入新节点
         :return:
         """
-        bst_tree = bst.Tree(keys=[7, 4, 12, 10, 9, 14])
-        t = avl.Tree(root=bst_tree.root)
+        bst_tree = bst.BSTree(keys=[7, 4, 12, 10, 9, 14])
+        t = avl.AVLTree(root=bst_tree.root)
         t.insert_node(Node(key=8))
         self.assertLess(abs(avl.balance_factor(t.root)), 2, 'The tree do NOT balance after insert node!')
 
@@ -148,7 +148,7 @@ class AVLTest(unittest.TestCase):
         删除结点
         :return:
         """
-        bst_tree = bst.Tree(keys=[7, 4, 12, 10, 9, 14])
-        t = avl.Tree(root=bst_tree.root)
+        bst_tree = bst.BSTree(keys=[7, 4, 12, 10, 9, 14])
+        t = avl.AVLTree(root=bst_tree.root)
         t.delete_node(t.root.left)
         self.assertLess(abs(avl.balance_factor(t.root)), 2, 'The tree do NOT balance after delete node!')

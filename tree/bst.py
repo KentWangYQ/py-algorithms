@@ -3,7 +3,7 @@
 from tree.node import Node
 
 
-class Tree(object):
+class BSTree(object):
     def __init__(self, root=None, keys=None):
         self.root = root
         if keys:

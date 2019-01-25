@@ -1,10 +1,10 @@
 # coding: utf-8
 
 from tree.node import Node
-from tree.bst import Tree as bstTree
+from tree.bst import BSTree
 
 
-class Tree(bstTree):
+class AVLTree(BSTree):
     """
     AVL Tree
     继承自bst tree

@@ -10,7 +10,7 @@ from tree import bst
       / \   \
      2  6    9
 """
-demo_tree = bst.Tree(keys=[7, 5, 2, 6, 8, 9])
+demo_tree = bst.BSTree(keys=[7, 5, 2, 6, 8, 9])
 
 
 class BSTTest(unittest.TestCase):

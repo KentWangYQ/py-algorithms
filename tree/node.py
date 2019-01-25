@@ -9,6 +9,5 @@ class Node(object):
     left = None
     right = None
 
-    def __init__(self, key, data=None):
+    def __init__(self, key):
         self.key = key
-        self.data = data
