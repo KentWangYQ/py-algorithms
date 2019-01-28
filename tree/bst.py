@@ -4,6 +4,10 @@ from tree.node import Node
 
 
 class BSTree(object):
+    """
+    二叉搜索树
+    """
+
     def __init__(self, root=None, keys=None):
         self.root = root
         if keys:
