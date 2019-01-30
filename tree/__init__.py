@@ -1,3 +1,3 @@
-from . import avl, bst
+from . import avl, bst, bt
 
-__all__ = ['avl', 'bst']
+__all__ = ['avl', 'bst', 'bt']
