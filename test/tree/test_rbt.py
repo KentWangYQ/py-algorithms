@@ -25,7 +25,7 @@ class RBTreeTest(unittest.TestCase):
         ll_tree.right_rotate(ll_tree.root)
         self.assertLess(avl.balance_factor(ll_tree.root), 2, 'The ll tree do NOT balance after left rotate!')
 
-    def test_fixup(self):
+    def test_insert_fixup(self):
         """
         红黑树修复测试
         :return:
@@ -37,7 +37,7 @@ class RBTreeTest(unittest.TestCase):
         if p:
             p.left = node
             node.parent = p
-        self.assertIs(tree.check(), True, 'The tree is NOT a RB tree after fixup!')
+        self.assertIs(tree.check(), True, 'The tree is NOT a RB tree after insert_fixup!')
 
     def test_insert(self):
         """
@@ -49,3 +49,12 @@ class RBTreeTest(unittest.TestCase):
         for key in keys:
             tree.insert_node(rbt.RBNode(key=key))
         self.assertIs(tree.check(), True, 'The tree is NOT a RB tree after insert new node!')
+
+    def test_delete_fixup(self):
+        pass
+
+    def test_delete(self):
+        tree = rbt.RBTree(keys=[8, 15, 2, 12, 4, 9, 6, 20, 10])
+        self.assertIs(tree.check(), True, 'The tree is NOT a RB tree!')
+        tree.delete(tree.root.right)
+        self.assertIs(tree.check(), True, 'The tree is NOT a RB tree after delete node!')
