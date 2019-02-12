@@ -19,7 +19,7 @@ class BNode(object):
         self.n += 1
 
     def insert_c(self, i, cn):
-        j = self.c.index(None) - 1
+        j = (self.c.index(None) if None in self.c else len(self.c)) - 1
         while j >= i:
             self.c[j + 1] = self.c[j]
             j -= 1
@@ -30,7 +30,7 @@ class BNode(object):
         self.n += 1
 
     def append_c(self, cn):
-        idx = self.c.index(None)
+        idx = (self.c.index(None) if None in self.c else len(self.c))
         self.c[idx] = cn
 
     def del_key(self, i):
@@ -41,7 +41,7 @@ class BNode(object):
         self.n -= 1
 
     def del_c(self, i):
-        idx = self.c.index(None) - 1
+        idx = (self.c.index(None) if None in self.c else len(self.c)) - 1
         while i < idx:
             self.c[i] = self.c[i + 1]
             i += 1
@@ -54,7 +54,7 @@ class BNode(object):
         return key
 
     def pop_c(self):
-        idx = self.c.index(None) - 1
+        idx = (self.c.index(None) if None in self.c else len(self.c)) - 1
         c = self.c[idx]
         self.c[idx] = None
         return c
@@ -274,10 +274,10 @@ class BTree(object):
 
                         # 将x.c[i]合并进x.c[i-1]，形成新的结点
                         # 将x.c[i]的关键字合并进x.c[i-1]
-                        for key in x.c[i].keys:
+                        for key in [key for key in x.c[i].keys if key]:
                             x.c[i - 1].append_key(key)
                         # 将x.c[i]的子结点指针合并进x.c[i-1]
-                        for c in x.c[i].c:
+                        for c in [c for c in x.c[i].c if c]:
                             x.c[i - 1].append_c(c)
 
                         # 删除x中的第i-1个关键字
@@ -295,10 +295,10 @@ class BTree(object):
 
                         # 将x.c[i+1]合并进x.c[i]，形成新的结点
                         # 将x.c[i+1]的关键字合并进x.c[i]
-                        for key in x.c[i + 1].keys:
+                        for key in [key for key in x.c[i + 1].keys if key]:
                             x.c[i].append_key(key)
                         # 将x.c[i+1]的子结点指针合并进x.c[i]
-                        for c in x.c[i + 1].c:
+                        for c in [c for c in x.c[i + 1].c if c]:
                             x.c[i].append_c(c)
 
                         # 删除x中的第i个关键字

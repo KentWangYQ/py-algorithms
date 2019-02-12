@@ -135,42 +135,37 @@ class BTreeTest(unittest.TestCase):
         self.assertEqual(expect, actual, 'The tree is NOT a B-Tree after delete key!')
 
         # 情况3b测试
-        ''' 删除15，删除后的树
-                 ____________5,12,18,22_____________
-                /      \          \          \      \
-            1,3,4  7,8,10,11  13,14,16,17   19,20  23,24
+        ''' 删除17，删除后的树
+        
+                 ______________5,12,18,22___________
+                /      /        /            \      \
+            1,3,4  7,8,10,11  13,14,15,16   19,20  23,24
 
         '''
-        r.delete(r.root, 15)
-        expect = [5, 12, 18, 22, 1, 3, 4, 7, 8, 10, 11, 13, 14, 16, 17, 19, 20, 23, 24]
+        r.delete(r.root, 17)
+        expect = [5, 12, 18, 22, 1, 3, 4, 7, 8, 10, 11, 13, 14, 15, 16, 19, 20, 23, 24]
         actual = b_tree_serialization(r)
         self.assertEqual(expect, actual, 'The tree is NOT a B-Tree after delete key!')
 
     def test_delete_random(self):
         # 进行1000次测试
-        # for _ in range(1000):
-        tree = BTree(t=3)
-        tree.create()
-        # 随机结点数量
-        r1 = random.randint(20, 30)
-        keys = []
-        # 构建B-Tree
-        for _ in range(r1):
-            key = random.randint(0, r1)
-            keys.append(key)
-            tree.insert(key)
+        for _ in range(1000):
+            tree = BTree(t=3)
+            tree.create()
+            # 随机结点数量
+            r1 = random.randint(20, 1000)
+            keys = []
+            # 构建B-Tree
+            for _ in range(r1):
+                key = random.randint(0, r1)
+                keys.append(key)
+                tree.insert(key)
 
-        # 打印B-Tree
-        bt.tree_print(tree.root)
-
-        # 三分之一结点删除测试
-        for _ in range(int(len(keys) / 3)):
-            key = keys[random.randint(0, len(keys) - 1)]
-            print('Delete key: %d' % key)
-            tree.delete(tree.root, key)
-
-            # 打印B-Tree
-            bt.tree_print(tree.root)
+            # 三分之一结点删除测试
+            for _ in range(int(len(keys) / 3)):
+                key = keys[random.randint(0, len(keys) - 1)]
+                print('Delete key: %d' % key)
+                tree.delete(tree.root, key)
 
     def test_minimum(self):
         """
