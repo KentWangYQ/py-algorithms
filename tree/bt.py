@@ -10,6 +10,55 @@ class BNode(object):
     n = 0  # 关键字个数
     leaf = True  # 是否为叶子结点
 
+    def insert_key(self, i, k):
+        j = self.n - 1
+        while j >= i:
+            self.keys[j + 1] = self.keys[j]
+            j -= 1
+        self.keys[i] = k
+        self.n += 1
+
+    def insert_c(self, i, cn):
+        j = self.c.index(None) - 1
+        while j >= i:
+            self.c[j + 1] = self.c[j]
+            j -= 1
+        self.c[i] = cn
+
+    def append_key(self, k):
+        self.keys[self.n] = k
+        self.n += 1
+
+    def append_c(self, cn):
+        idx = self.c.index(None)
+        self.c[idx] = cn
+
+    def del_key(self, i):
+        while i < self.n - 1:
+            self.keys[i] = self.keys[i + 1]
+            i += 1
+        self.keys[self.n - 1] = None
+        self.n -= 1
+
+    def del_c(self, i):
+        idx = self.c.index(None) - 1
+        while i < idx:
+            self.c[i] = self.c[i + 1]
+            i += 1
+        self.c[idx] = None
+
+    def pop_key(self):
+        key = self.keys[self.n - 1]
+        self.keys[self.n - 1] = None
+        self.n -= 1
+        return key
+
+    def pop_c(self):
+        idx = self.c.index(None) - 1
+        c = self.c[idx]
+        self.c[idx] = None
+        return c
+
     def __init__(self, t=5):
         self.keys = [None] * (2 * t - 1)
         self.c = [None] * (2 * t)
@@ -128,23 +177,211 @@ class BTree(object):
             # 直接按照非满规则插入
             self.insert_nonfull(r, k)
 
-    def search(self, x, k):
-        """
-        键搜索
-        :param x:
-        :param k:
-        :return:
-        """
-        i = 0
-        while i < x.n and k > x.keys[i]:
+    def delete(self, x, k):
+        if k in x.keys:
+            i = x.keys.index(k)
+
+            if x.leaf:
+                # 情况1：k存在于x中，且x为叶子结点
+                x.del_key(i)
+                return True  # 成功删除k
+            else:
+                # 情况2：k存在于x中，且x为内部结点
+                y = x.c[i]  # k的左子结点（简化表述）
+                z = x.c[i + 1]  # k的右子结点（简化表述）
+                if y.n > self.t - 1:
+                    # 情况2a：k的左子结点至少包含t个关键字
+                    # 解决方案：找到k在y为根的子树中的前驱k'，递归删除k'，并在x中使用k'替代k
+                    x.keys[i] = y.keys[y.n - 1]
+                    return self.delete(y, y.keys[y.n - 1])
+                elif z.n > self.t - 1:
+                    # 情况2b：k的右子结点至少包含t个关键字
+                    # 解决方案：找到k在y为根的子树中的后继k'，递归删除k'，并在x中使用k'替代k
+                    x.keys[i] = z.keys[0]
+                    return self.delete(z, z.keys[0])
+                else:
+                    # 情况2c：y和z都只含有t-1个关键字
+                    # 解决方案：将k和z都合并进y，这样x失去k和指向z的指针。然后释放z并递归从y中删除k
+                    y.keys[y.n] = x.keys[i]
+                    j = 0
+                    p = y.n
+                    while j < z.n:
+                        y.keys[y.n + 1 + j] = z.keys[j]
+                        y.c[y.n + 1 + j] = z.c[j]
+                        j += 1
+                    y.n += 1 + z.n
+                    x.del_c(i + 1)
+                    x.del_key(i)
+                    return self.delete(y, y.keys[p])
+        else:
+            if x.leaf:
+                return False  # k不在该树中
+
+            # 找到k所属的子树
+            i = x.n - 1
+            while i >= 0 and k < x.keys[i]:
+                i -= 1
             i += 1
-        if k == x.keys[i]:
-            return x, i
 
-        if x.leaf:
+            if x.c[i].n == self.t - 1:
+                ln = x.c[i - 1].n if i > 0 else -1
+                rn = x.c[i + 1].n if i < x.n else -1
+
+                if ln > self.t - 1:
+                    # 情况3a(左)：x.c[i]只有t-1个关键字，相邻的左兄弟结点有至少t个关键字
+                    # 解决方案：
+                    #   1. x中的第i-1个关键字下降至x.c[i]，成为第一个关键字
+                    #   2. x.c[i-1](x.c[i]的左兄弟结点)中的最后一个关键字提升至x，成为第i-1个关键字
+                    #   3. 子结点再平衡，将x.c[i-1]的最后一个子结点指针，转移至x.c[i]，成为第一个子结点
+
+                    # 将x的第i-1个key降至x.c[i]的第一个key
+                    x.c[i].insert_key(0, x.keys[i - 1])
+
+                    # x.c[i-1]的最后一个key提升至x的第i-1个key位置
+                    x.keys[i - 1] = x.c[i - 1].keys[x.c[i - 1].n - 1]
+
+                    # 删除x.c[i-1]的最后一个key
+                    x.c[i - 1].pop_key()
+
+                    # 相应的将x.c[i-1]的最后一个子结点指针转移至x.c[i]的第一个字节点指针位置
+                    x.c[i].insert_c(0, x.c[i - 1].pop_c())
+                elif rn > self.t - 1:
+                    # 情况3a(右)：同如上3a(左)对称
+
+                    # 将x的第i个关键字降至x.c[i]，成为最后一个关键字
+                    x.c[i].append_key(x.keys[i])
+
+                    # 将x.c[i+1](x.c[i]的右兄弟结点)中的第一个关键字提升至x，成为第i个关键字
+                    x.keys[i] = x.c[i + 1].keys[0]
+
+                    # 删除x.c[i+1]的第一个关键字
+                    x.c[i + 1].del_key(0)
+
+                    # 相应的将x.c[i+1]的第一个子结点的指针转移至x.c[i]，成为最后一个子结点
+                    x.c[i].append_c(x.c[i + 1].c[0])
+
+                    # 删除x.c[i+1]的第一个子结点指针
+                    x.c[i + 1].del_c(0)
+                else:
+                    # 情况3b：x.c[i]只有t-1个关键字，且其相邻的兄弟结点都只有t-1个关键字
+                    # 解决方案：x.c[i]与其中一个相邻的兄弟结点合并，x中的一个key降至新的结点，使之成为该结点的中间关键字
+
+                    if ln > -1:
+                        # 情况3b(左)
+
+                        # 将x中的第i-1个关键字降至新结点，成为中间关键字
+                        x.c[i - 1].append_key(x.keys[i - 1])
+
+                        # 将x.c[i]合并进x.c[i-1]，形成新的结点
+                        # 将x.c[i]的关键字合并进x.c[i-1]
+                        for key in x.c[i].keys:
+                            x.c[i - 1].append_key(key)
+                        # 将x.c[i]的子结点指针合并进x.c[i-1]
+                        for c in x.c[i].c:
+                            x.c[i - 1].append_c(c)
+
+                        # 删除x中的第i-1个关键字
+                        x.del_key(i - 1)
+                        # 删除x的第i个子结点指针
+                        x.del_c(i)
+
+                        # 目标子结点指向i-1
+                        i -= 1
+                    elif rn > -1:
+                        # 情况3b(右)
+
+                        # 将x中的第i个关键字降至新结点，成为中间关键字
+                        x.c[i].append_key(x.keys[i])
+
+                        # 将x.c[i+1]合并进x.c[i]，形成新的结点
+                        # 将x.c[i+1]的关键字合并进x.c[i]
+                        for key in x.c[i + 1].keys:
+                            x.c[i].append_key(key)
+                        # 将x.c[i+1]的子结点指针合并进x.c[i]
+                        for c in x.c[i + 1].c:
+                            x.c[i].append_c(c)
+
+                        # 删除x中的第i个关键字
+                        x.del_key(i)
+                        # 删除x中的第i+1个子结点指针
+                        x.del_c(i + 1)
+
+            return self.delete(x.c[i], k)
+
+
+def search(x, k):
+    """
+    键搜索
+    :param x:
+    :param k:
+    :return:
+    """
+    i = 0
+    while i < x.n and k > x.keys[i]:
+        i += 1
+    if k == x.keys[i]:
+        return x, i
+
+    if x.leaf:
+        return None
+
+    return search(x.c[i], k)
+
+
+def minimum(x):
+    while x.c[0]:
+        x = x.c[0]
+    return x, 0
+
+
+def maximum(x):
+    while x.c[x.n]:
+        x = x.c[x.n]
+    return x, x.n - 1
+
+
+def successor(x, i):
+    if x.leaf:
+        if i == x.n - 1:
             return None
+        return x, i + 1
+    return minimum(x.c[i + 1])
 
-        return self.search(x.c[i], k)
+
+def predecessor(x, i):
+    if x.leaf:
+        if i == 0:
+            return None
+        return x, i - 1
+    return maximum(x.c[i])
+
+
+def tree_print(x):
+    print()
+    print('-----------------------------------')
+    keys = []
+    current = [x]
+    cs = []
+    key_str = '|'
+    while True:
+        for item in current:
+            keys.append([k for k in item.keys if k])
+            if item.c:
+                cs += [i for i in item.c if i]
+        current = cs
+        cs = []
+
+        for key in keys:
+            key_str += ','.join([str(i) for i in key]) + '|'
+        print(key_str)
+        keys = []
+        key_str = '|'
+
+        if len(current) <= 0:
+            break
+
+    print('-----------------------------------')
+    print()
 
 
 def ALLOCATE_NODE(t=5):
