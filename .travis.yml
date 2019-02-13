@@ -14,7 +14,7 @@ script:
   - pytest
 
 script:
-  - coverage run --source=. -m unittest discover
+  - coverage run --source=lib -m unittest discover
 
 after_success:
   - coveralls
