@@ -74,6 +74,8 @@ class BTreeTest(unittest.TestCase):
         r.insert(23)
         r.insert(24)
         # 验证B-Tree创建是否正确
+        print('Test start: init tree')
+        bt.tree_print(r.root)
         expect = [12, 6, 9, 15, 18, 21, 1, 2, 3, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17, 19, 20, 22, 23, 24]
         actual = b_tree_serialization(r)
         self.assertEqual(expect, actual, 'The tree is NOT created in B-Tree role!')
@@ -88,6 +90,8 @@ class BTreeTest(unittest.TestCase):
 
         '''
         r.delete(r.root, 2)
+        print('Scene 1: delete 2')
+        bt.tree_print(r.root)
         expect = [15, 6, 9, 12, 18, 21, 1, 3, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17, 19, 20, 22, 23, 24]
         actual = b_tree_serialization(r)
         self.assertEqual(expect, actual, 'The tree is NOT a B-Tree after delete key!')
@@ -102,6 +106,8 @@ class BTreeTest(unittest.TestCase):
 
         '''
         r.delete(r.root, 6)
+        print('Scene 2a: delete 6')
+        bt.tree_print(r.root)
         expect = [15, 5, 9, 12, 18, 21, 1, 3, 4, 7, 8, 10, 11, 13, 14, 16, 17, 19, 20, 22, 23, 24]
         actual = b_tree_serialization(r)
         self.assertEqual(expect, actual, 'The tree is NOT a B-Tree after delete key!')
@@ -116,6 +122,8 @@ class BTreeTest(unittest.TestCase):
 
         '''
         r.delete(r.root, 21)
+        print('Scene 2b: delete 21')
+        bt.tree_print(r.root)
         expect = [12, 5, 9, 15, 18, 22, 1, 3, 4, 7, 8, 10, 11, 13, 14, 16, 17, 19, 20, 23, 24]
         actual = b_tree_serialization(r)
         self.assertEqual(expect, actual, 'The tree is NOT a B-Tree after delete key!')
@@ -130,6 +138,8 @@ class BTreeTest(unittest.TestCase):
 
         '''
         r.delete(r.root, 9)
+        print('Scene 2c: delete 9')
+        bt.tree_print(r.root)
         expect = [15, 5, 12, 18, 22, 1, 3, 4, 7, 8, 10, 11, 13, 14, 16, 17, 19, 20, 23, 24]
         actual = b_tree_serialization(r)
         self.assertEqual(expect, actual, 'The tree is NOT a B-Tree after delete key!')
@@ -143,29 +153,33 @@ class BTreeTest(unittest.TestCase):
 
         '''
         r.delete(r.root, 17)
+        print('Scene 3b: delete 17')
+        bt.tree_print(r.root)
         expect = [5, 12, 18, 22, 1, 3, 4, 7, 8, 10, 11, 13, 14, 15, 16, 19, 20, 23, 24]
         actual = b_tree_serialization(r)
         self.assertEqual(expect, actual, 'The tree is NOT a B-Tree after delete key!')
 
     def test_delete_random(self):
-        # 进行1000次测试
-        for _ in range(1000):
-            tree = BTree(t=3)
+        # 进行10次测试
+        for i in range(10):
+            print('=====Round %d=====' % i)
+            tree = BTree(t=100)
             tree.create()
             # 随机结点数量
-            r1 = random.randint(20, 1000)
+            r1 = random.randint(20, 10000)
             keys = []
             # 构建B-Tree
             for _ in range(r1):
                 key = random.randint(0, r1)
                 keys.append(key)
                 tree.insert(key)
+                # print('Insert key: %d' % key)
 
             # 三分之一结点删除测试
             for _ in range(int(len(keys) / 3)):
                 key = keys[random.randint(0, len(keys) - 1)]
-                print('Delete key: %d' % key)
                 tree.delete(tree.root, key)
+                # print('Delete key: %d' % key)
 
     def test_minimum(self):
         """
