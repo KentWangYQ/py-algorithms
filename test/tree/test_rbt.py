@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import unittest
-from tree import bst, avl, rbt
+from source.tree import bst, avl, rbt
 
 
 class RBTreeTest(unittest.TestCase):

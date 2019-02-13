@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import unittest
-from tree import bst
+from source.tree import bst
 
 """ demo tree
          7

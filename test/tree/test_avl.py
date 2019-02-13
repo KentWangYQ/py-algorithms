@@ -2,8 +2,8 @@
 
 import unittest
 
-from tree.node import Node
-from tree import bst, avl
+from source.tree.node import Node
+from source.tree import bst, avl
 
 """ demo tree
          7

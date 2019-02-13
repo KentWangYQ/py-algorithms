@@ -3,8 +3,8 @@
 import unittest
 import random
 
-from tree import bt
-from tree.bt import BNode, BTree
+from source.tree import bt
+from source.tree.bt import BNode, BTree
 
 
 class BTreeTest(unittest.TestCase):
