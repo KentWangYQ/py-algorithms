@@ -13,5 +13,8 @@ install:
 script:
   - pytest
 
+script:
+  - coverage run --source=. -m unittest discover
+
 after_success:
   - coveralls
