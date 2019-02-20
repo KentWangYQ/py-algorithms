@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 import unittest
 from source.tree import bst, avl, rbt

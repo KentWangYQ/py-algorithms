@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 class BNode(object):
@@ -6,6 +6,7 @@ class BNode(object):
     B-Tree 结点
     """
     keys = []  # 键
+    data = []  # 卫星数据
     c = []  # 子结点
     n = 0  # 关键字个数
     leaf = True  # 是否为叶子结点
@@ -68,7 +69,7 @@ class BTree(object):
     B-Tree
     """
 
-    def __init__(self, root=None, t=2):
+    def __init__(self, root=None, t=3):
         self.root = root  # 根结点
         self.t = t  # 最小度数
 
@@ -81,7 +82,7 @@ class BTree(object):
         DISK_WRITE(x)
         self.root = x
 
-    def split_node(self, x, i):
+    def _split_node(self, x, i):
         """
         拆分满结点
         :param x:
@@ -137,7 +138,7 @@ class BTree(object):
             DISK_READ(x.c[i])
             # 如果子结点为满结点，进行拆分
             if x.c[i].n >= 2 * self.t - 1:
-                self.split_node(x, i)
+                self._split_node(x, i)
                 if k > x.keys[i]:
                     i += 1
 
@@ -157,7 +158,7 @@ class BTree(object):
             self.root = s
             s.c[0] = r
             s.leaf = False
-            self.split_node(s, 0)
+            self._split_node(s, 0)
             self.insert_nonfull(s, k)
         else:
             # 直接按照非满规则插入
@@ -384,7 +385,7 @@ def tree_print(x):
     print()
 
 
-def ALLOCATE_NODE(t=5):
+def ALLOCATE_NODE(t=3):
     """
     创建并初始化一个B-Tree结点
     :param t:
