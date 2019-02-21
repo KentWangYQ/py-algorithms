@@ -114,7 +114,7 @@ class BTree(object):
         DISK_WRITE(y)
         DISK_WRITE(z)
 
-    def insert_nonfull(self, x, k):
+    def _insert_non_full(self, x, k):
         """
         插入新结点(非满结点)
         :param x:
@@ -143,7 +143,7 @@ class BTree(object):
                     i += 1
 
             # 向下迭代
-            self.insert_nonfull(x.c[i], k)
+            self._insert_non_full(x.c[i], k)
 
     def insert(self, k):
         """
@@ -159,10 +159,10 @@ class BTree(object):
             s.c[0] = r
             s.leaf = False
             self._split_node(s, 0)
-            self.insert_nonfull(s, k)
+            self._insert_non_full(s, k)
         else:
             # 直接按照非满规则插入
-            self.insert_nonfull(r, k)
+            self._insert_non_full(r, k)
 
     def delete(self, x, k):
         if k in x.keys:
@@ -171,7 +171,6 @@ class BTree(object):
             if x.leaf:
                 # 情况1：k存在于x中，且x为叶子结点
                 x.del_key(i)
-                # print('1')
                 return  # 成功删除k
             else:
                 # 情况2：k存在于x中，且x为内部结点
@@ -181,13 +180,11 @@ class BTree(object):
                     # 情况2a：k的左子结点至少包含t个关键字
                     # 解决方案：找到k在y为根的子树中的前驱k'，递归删除k'，并在x中使用k'替代k
                     x.keys[i] = y.keys[y.n - 1]
-                    # print('2a')
                     self.delete(y, y.keys[y.n - 1])
                 elif z.n > self.t - 1:
                     # 情况2b：k的右子结点至少包含t个关键字
                     # 解决方案：找到k在y为根的子树中的后继k'，递归删除k'，并在x中使用k'替代k
                     x.keys[i] = z.keys[0]
-                    # print('2b')
                     self.delete(z, z.keys[0])
                 else:
                     # 情况2c：y和z都只含有t-1个关键字
@@ -201,7 +198,6 @@ class BTree(object):
 
                     x.del_key(i)
                     x.del_c(i + 1)
-                    # print('2c')
                     self.delete(y, k)
         else:
             if x.leaf:
@@ -235,7 +231,6 @@ class BTree(object):
 
                     # 相应的将x.c[i-1]的最后一个子结点指针转移至x.c[i]的第一个字节点指针位置
                     x.c[i].insert_c(0, x.c[i - 1].pop_c())
-                    # print('3a l')
                 elif rn > self.t - 1:
                     # 情况3a(右)：同如上3a(左)对称
 
@@ -253,7 +248,6 @@ class BTree(object):
 
                     # 删除x.c[i+1]的第一个子结点指针
                     x.c[i + 1].del_c(0)
-                    # print('3a r')
                 else:
                     # 情况3b：x.c[i]只有t-1个关键字，且其相邻的兄弟结点都只有t-1个关键字
                     # 解决方案：x.c[i]与其中一个相邻的兄弟结点合并，x中的一个key降至新的结点，使之成为该结点的中间关键字
@@ -279,7 +273,6 @@ class BTree(object):
 
                         # 目标子结点指向i-1
                         i -= 1
-                        # print('3b l')
                     elif rn > -1:
                         # 情况3b(右)
 
@@ -298,7 +291,6 @@ class BTree(object):
                         x.del_key(i)
                         # 删除x中的第i+1个子结点指针
                         x.del_c(i + 1)
-                        # print('3b r')
 
             self.delete(x.c[i], k)
 
@@ -308,7 +300,6 @@ class BTree(object):
             x.leaf = x.c[0].leaf
             x.keys = x.c[0].keys
             x.c = x.c[0].c
-            # print('降级')
 
 
 def search(x, k):
