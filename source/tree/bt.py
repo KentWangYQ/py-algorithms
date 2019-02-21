@@ -333,20 +333,20 @@ def maximum(x):
     return x, x.n - 1
 
 
+def predecessor(x, i):
+    if x.leaf:
+        if i == 1:
+            return None, -1
+        return x, i - 1
+    return maximum(x.c[i])
+
+
 def successor(x, i):
     if x.leaf:
         if i == x.n - 1:
-            return None
+            return None, -1
         return x, i + 1
     return minimum(x.c[i + 1])
-
-
-def predecessor(x, i):
-    if x.leaf:
-        if i == 0:
-            return None
-        return x, i - 1
-    return maximum(x.c[i])
 
 
 def tree_print(x):

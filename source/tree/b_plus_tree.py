@@ -138,6 +138,40 @@ class BPTree(object):
         DISK_WRITE(y)
         DISK_WRITE(z)
 
+    def _merge_node(self, x, i):
+        y = x.c[i]  # type:BPNode
+        l_bro = x.c[i - 1] if i > 0 else None  # type:BPNode
+        r_bro = x.c[i + 1] if i < x.n - 1 else None  # type:BPNode
+
+        if l_bro and l_bro.n <= self.t:
+            while y.n > 0:
+                l_bro.append_key(y.del_key(0))
+                l_bro.append_c(y.del_c(0))
+                if y.is_leaf:
+                    l_bro.append_value((y.del_value(0)))
+
+            if y.is_leaf:
+                l_bro.next = y.next
+
+            x.del_key(i)
+            x.del_c(i)
+            return True
+        elif r_bro and r_bro.n <= self.t:
+            while r_bro.n > 0:
+                y.append_key(r_bro.del_key(0))
+                y.append_c(r_bro.del_c(0))
+                if y.is_leaf:
+                    y.append_value(r_bro.del_value(0))
+
+            if y.is_leaf:
+                y.next = r_bro.next
+
+            x.del_key(i + 1)
+            x.del_c(i + 1)
+            return True
+
+        return False
+
     def _rotation(self, x, i):
         r = x.c[i]  # type: BPNode
         l_bro = x.c[i - 1] if i > 0 else None  # type: BPNode
@@ -161,7 +195,7 @@ class BPTree(object):
             return True
         return False
 
-    def _derotation(self, x, i):
+    def _de_rotation(self, x, i):
         r = x.c[i]  # type:BPNode
         l_bro = x.c[i - 1] if i > 0 else None  # type: BPNode
         r_bro = x.c[i + 1] if i < x.n - 1 else None  # type: BPNode
@@ -224,7 +258,60 @@ class BPTree(object):
         self._insert_non_full(self.root, k, v)
 
     def delete(self, x, k):
-        pass
+        i = x.n - 1
+        while i >= 0 and k < x.keys[i]:
+            i -= 1
+
+        if x.is_leaf:
+            idx = x.keys.index(k)
+            if idx > -1:
+                x.del_key(idx)
+                x.del_value(idx)
+        else:
+            if i < 0:
+                # key不在该树中
+                return
+
+            if x.c[i].n <= self.t - 1:
+                if not self._de_rotation(x, i):
+                    self._merge_node(x, i)
+                    if i > x.n - 1 or k < x.keys[i]:
+                        i -= 1
+
+            if k == x.keys[i]:
+                y, j = successor(x, i)
+                x.keys[i] = y.keys[j]
+
+            self.delete(x.c[i], k)
+
+
+def minimum(x):
+    while x.c[0]:
+        x = x.c[0]
+    return x, 0
+
+
+def maximum(x):
+    while x.c[x.n - 1]:
+        x = x.c[x.n - 1]
+    return x, x.n - 1
+
+
+def predecessor(x, i):
+    if x.is_leaf:
+        if i <= 0:
+            return None, -1
+        return x, i - 1
+    return maximum(x.c[i])
+
+
+def successor(x, i):
+    if x.is_leaf:
+        if i >= x.n - 1:
+            return None, -1
+        return x, i + 1
+    y, j = minimum(x.c[i])
+    return y, j + 1
 
 
 def ALLOCATE_NODE(t=3, is_leaf=False):
