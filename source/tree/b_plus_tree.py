@@ -285,6 +285,23 @@ class BPTree(object):
             self.delete(x.c[i], k)
 
 
+def search(x, k):
+    i = x.n - 1
+    while i >= 0 and k < x.keys[i]:
+        i -= 1
+
+    if i < 0:
+        return None, -1
+
+    if x.is_leaf:
+        if k == x.keys[i]:
+            return x, i
+        else:
+            return None, -1
+
+    return search(x.c[i], k)
+
+
 def minimum(x):
     while x.c[0]:
         x = x.c[0]

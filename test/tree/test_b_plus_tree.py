@@ -2,6 +2,7 @@
 
 import unittest
 import random
+from source.tree import b_plus_tree
 from source.tree.b_plus_tree import BPNode, BPTree
 
 
@@ -86,6 +87,14 @@ class BPTreeTest(unittest.TestCase):
         self.assertEqual([i for i in range(20) if i != del_key], tree.tree_walk(),
                          'The tree has WRONG keys after delete key!')
 
+    def test_search(self):
+        tree = b_plus_tree_generate(t=3, max_key=20)
+
+        self.assertEqual((tree.root.c[0].c[1], 2), b_plus_tree.search(tree.root, 6),
+                         'Search result is NOT match with the expect!')
+
+        self.assertEqual((None, -1), b_plus_tree.search(tree.root, 21), 'Search result is NOT match the expect!')
+
     def test_random_insert_delete_test(self):
         for i in range(100):
             print('Round: %d' % i)
@@ -107,9 +116,13 @@ class BPTreeTest(unittest.TestCase):
 
             for _ in range(n // 3):
                 i = random.randint(0, len(keys) - 1)
+
+                x1, j1 = b_plus_tree.search(tree.root, keys[i])
+                self.assertEqual(x1.keys[j1], keys[i], 'The search result does NOT match expect!')
+
                 tree.delete(tree.root, keys[i])
                 del keys[i]
-                self.assertEqual(keys, tree.tree_walk(), 'The tree has WRONG keys after delele key!')
+                self.assertEqual(keys, tree.tree_walk(), 'The tree has WRONG keys after delete key!')
 
 
 def b_plus_tree_generate(t=3, max_key=20, keys=None):

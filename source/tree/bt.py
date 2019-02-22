@@ -316,7 +316,7 @@ def search(x, k):
         return x, i
 
     if x.leaf:
-        return None
+        return None, -1
 
     return search(x.c[i], k)
 
