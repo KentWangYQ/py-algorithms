@@ -54,7 +54,7 @@ class BTreeTest(unittest.TestCase):
         self.assertEqual((x, i), (r.root.c[0].c[0], 1), 'The result is NOT for key: %s' % 2)
 
         # 键不存在
-        x = bt.search(r.root, 21)
+        x, i = bt.search(r.root, 21)
         self.assertIsNone(x, 'There is NO key %s in tree, but found!' % 11)
 
     def test_delete(self):
