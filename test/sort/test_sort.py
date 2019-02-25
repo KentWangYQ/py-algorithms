@@ -8,31 +8,45 @@ from source.sort import sort
 
 
 class SortTest(unittest.TestCase):
+    a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
+
     def test_insertion_sort(self):
-        a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
+        a = copy.deepcopy(self.a)
         insertion_sort_result = sort.insertion_sort(copy.deepcopy(a))
         list.sort(a)
         self.assertEqual(a, insertion_sort_result, 'The list is NOT sorted after insertion sort!')
 
     def test_insertion_sort_reverse(self):
-        a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
+        a = copy.deepcopy(self.a)
         insertion_sort_result = sort.insertion_sort(copy.deepcopy(a), reverse=True)
         list.sort(a, reverse=True)
         self.assertEqual(a, insertion_sort_result, 'The list is NOT sorted after insertion sort reverse!')
 
     def test_merge_sort(self):
-        a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
+        a = copy.deepcopy(self.a)
         merge_sort_result = copy.deepcopy(a)
         sort.merge_sort(merge_sort_result, 0, len(a) - 1)
         list.sort(a)
         self.assertEqual(a, merge_sort_result, 'The list is NOT sorted after merge sort!')
 
     def test_merge_sort_reverse(self):
-        a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
+        a = copy.deepcopy(self.a)
         merge_sort_result = copy.deepcopy(a)
         sort.merge_sort(merge_sort_result, 0, len(merge_sort_result) - 1, reverse=True)
         list.sort(a, reverse=True)
         self.assertEqual(a, merge_sort_result, 'The list is NOT sorted after merge sort reverse!')
+
+    def test_heap_sort(self):
+        a = copy.deepcopy(self.a)
+        heap_sort_result = sort.heap_sort(a)
+        list.sort(a)
+        self.assertEqual(a, heap_sort_result, 'The list is NOT sorted after heap sort!')
+
+    def test_heap_sort_reverse(self):
+        a = copy.deepcopy(self.a)
+        heap_sort_result = sort.heap_sort(a, reverse=True)
+        list.sort(a, reverse=True)
+        self.assertEqual(a, heap_sort_result, 'The list is NOT sorted after heap sort reverse!')
 
     def test_sort_random_list(self):
         t = 1000

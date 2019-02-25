@@ -22,6 +22,7 @@ class Heap(metaclass=ABCMeta):
     def __init__(self, a):
         self.A = a
         self.heap_size = len(self.A)
+        self.build_heap()
 
     @abstractmethod
     def heapify(self, i):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from source.tree.heap import MinHeap, MaxHeap
 
 
 def insertion_sort(a, reverse=False):
@@ -43,3 +44,14 @@ def merge_sort(a, p, r, reverse=False):
         merge_sort(a, p, q, reverse=reverse)
         merge_sort(a, q + 1, r, reverse=reverse)
         _merge(a, p, q, r, reverse=reverse)
+
+
+def heap_sort(a, reverse=False):
+    heap = (MinHeap if reverse else MaxHeap)(a)
+
+    for i in range(len(heap.A) - 1, 0, -1):
+        heap.A[0], heap.A[i] = heap.A[i], heap.A[0]
+        heap.heap_size -= 1
+        heap.heapify(i)
+
+    return heap.A
