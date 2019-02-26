@@ -150,3 +150,11 @@ class MinHeap(Heap):
             self.A[self.heap_size] = float('inf')
         self.heap_size += 1
         self.decrease_key(self.heap_size - 1, key)
+
+
+class MaxPriorityQueue(MaxHeap):
+    pass
+
+
+class MinPriorityQueue(MinHeap):
+    pass
