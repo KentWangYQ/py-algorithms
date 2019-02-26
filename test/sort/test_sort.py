@@ -8,73 +8,105 @@ from source.sort import sort
 
 
 class SortTest(unittest.TestCase):
-    a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
+    def setUp(self):
+        self.a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
+        self.b = copy.deepcopy(self.a)
 
     def test_insertion_sort(self):
-        a = copy.deepcopy(self.a)
-        insertion_sort_result = sort.insertion_sort(copy.deepcopy(a))
-        list.sort(a)
-        self.assertEqual(a, insertion_sort_result, 'The list is NOT sorted after insertion sort!')
+        sort.insertion_sort(self.b)
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after insertion sort!')
 
     def test_insertion_sort_reverse(self):
-        a = copy.deepcopy(self.a)
-        insertion_sort_result = sort.insertion_sort(copy.deepcopy(a), reverse=True)
-        list.sort(a, reverse=True)
-        self.assertEqual(a, insertion_sort_result, 'The list is NOT sorted after insertion sort reverse!')
+        sort.insertion_sort(a=self.b, reverse=True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after insertion sort reverse!')
 
     def test_merge_sort(self):
-        a = copy.deepcopy(self.a)
-        merge_sort_result = copy.deepcopy(a)
-        sort.merge_sort(merge_sort_result, 0, len(a) - 1)
-        list.sort(a)
-        self.assertEqual(a, merge_sort_result, 'The list is NOT sorted after merge sort!')
+        sort.merge_sort(self.b)
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after merge sort!')
 
     def test_merge_sort_reverse(self):
-        a = copy.deepcopy(self.a)
-        merge_sort_result = copy.deepcopy(a)
-        sort.merge_sort(merge_sort_result, 0, len(merge_sort_result) - 1, reverse=True)
-        list.sort(a, reverse=True)
-        self.assertEqual(a, merge_sort_result, 'The list is NOT sorted after merge sort reverse!')
+        sort.merge_sort(a=self.b, reverse=True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after merge sort reverse!')
 
     def test_heap_sort(self):
-        a = copy.deepcopy(self.a)
-        heap_sort_result = sort.heap_sort(a)
-        list.sort(a)
-        self.assertEqual(a, heap_sort_result, 'The list is NOT sorted after heap sort!')
+        sort.heap_sort(self.b)
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after heap sort!')
 
     def test_heap_sort_reverse(self):
-        a = copy.deepcopy(self.a)
-        heap_sort_result = sort.heap_sort(a, reverse=True)
-        list.sort(a, reverse=True)
-        self.assertEqual(a, heap_sort_result, 'The list is NOT sorted after heap sort reverse!')
+        sort.heap_sort(self.b, reverse=True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after heap sort reverse!')
+
+    def test_quick_sort(self):
+        sort.quick_sort(self.b)
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after quick sort!')
+
+    def test_quick_sort_reverse(self):
+        sort.quick_sort(self.b, reverse=True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after quick sort reverse!')
+
+    def test_quick_sort_rd(self):
+        sort.quick_sort(self.b, randomized_partition=True)
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after quick sort!')
+
+    def test_quick_sort_reverse_rd(self):
+        sort.quick_sort(self.b, reverse=True, randomized_partition=True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after quick sort reverse!')
 
     def test_sort_random_list(self):
         t = 1000
         a = [random.randint(t * -1, t) for _ in range(t)]
 
-        insertion_sort_result = sort.insertion_sort(copy.deepcopy(a))
+        insertion_sort = copy.deepcopy(a)
+        sort.insertion_sort(insertion_sort)
 
-        merge_sort_result = copy.deepcopy(a)
-        sort.merge_sort(merge_sort_result, 0, len(merge_sort_result) - 1)
+        a_merge_sort = copy.deepcopy(a)
+        sort.merge_sort(a_merge_sort)
+
+        a_heap_sort = copy.deepcopy(a)
+        sort.heap_sort(a_heap_sort)
+
+        a_quick_sort = copy.deepcopy(a)
+        sort.quick_sort(a_quick_sort)
 
         list.sort(a)
 
-        self.assertEqual(a, insertion_sort_result, 'The list is NOT sorted after insertion sort!')
-        self.assertEqual(a, merge_sort_result, 'The list is NOT sorted after merge sort!')
+        self.assertEqual(a, insertion_sort, 'The list is NOT sorted after insertion sort!')
+        self.assertEqual(a, a_merge_sort, 'The list is NOT sorted after merge sort!')
+        self.assertEqual(a, a_heap_sort, 'The list is NOT sorted after heap sort!')
+        self.assertEqual(a, a_quick_sort, 'The list is NOT sorted after quick sort!')
 
     def test_sort_random_list_reverse(self):
         t = 1000
         a = [random.randint(t * -1, t) for _ in range(t)]
 
-        insertion_sort_result = sort.insertion_sort(copy.deepcopy(a), reverse=True)
+        a_insertion_sort = copy.deepcopy(a)
+        sort.insertion_sort(a_insertion_sort, reverse=True)
 
-        merge_sort_result = copy.deepcopy(a)
-        sort.merge_sort(merge_sort_result, 0, len(merge_sort_result) - 1, reverse=True)
+        a_merge_sort = copy.deepcopy(a)
+        sort.merge_sort(a_merge_sort, reverse=True)
+
+        a_heap_sort = copy.deepcopy(a)
+        sort.heap_sort(a_heap_sort, reverse=True)
+
+        a_quick_sort = copy.deepcopy(a)
+        sort.quick_sort(a_quick_sort, reverse=True)
 
         list.sort(a, reverse=True)
 
-        self.assertEqual(a, insertion_sort_result, 'The list is NOT sorted after insertion sort reverse!')
-        self.assertEqual(a, merge_sort_result, 'The list is NOT sorted after merge sort reverse!')
+        self.assertEqual(a, a_insertion_sort, 'The list is NOT sorted after insertion sort reverse!')
+        self.assertEqual(a, a_merge_sort, 'The list is NOT sorted after merge sort reverse!')
+        self.assertEqual(a, a_heap_sort, 'The list is NOT sorted after heap sort reverse!')
+        self.assertEqual(a, a_quick_sort, 'The list is NOT sorted after quick sort reverse!')
 
     def test_merge(self):
         p, q, r = 1, 5, 10

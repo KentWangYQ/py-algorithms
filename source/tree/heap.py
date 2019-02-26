@@ -19,8 +19,8 @@ class Heap(metaclass=ABCMeta):
     A = []
     heap_size = 0
 
-    def __init__(self, a=[]):
-        self.A = a
+    def __init__(self, a=None):
+        self.A = a or []
         self.heap_size = len(self.A)
         self.build_heap()
 

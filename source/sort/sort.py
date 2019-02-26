@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import random
+
 from source.tree.heap import MinHeap, MaxHeap
 
 
 def insertion_sort(a, reverse=False):
-    k = None
     for i in range(1, len(a)):
         k = i
         for _ in range(i - 1, -1, -1):
@@ -15,8 +16,6 @@ def insertion_sort(a, reverse=False):
                 k -= 1
             else:
                 break
-
-    return a
 
 
 def _merge(a, p, q, r, reverse=False):
@@ -38,20 +37,50 @@ def _merge(a, p, q, r, reverse=False):
         k += 1
 
 
-def merge_sort(a, p, r, reverse=False):
+def _merge_sort(a, p, r, reverse=False):
     if p < r:
         q = (r + p) // 2
-        merge_sort(a, p, q, reverse=reverse)
-        merge_sort(a, q + 1, r, reverse=reverse)
+        _merge_sort(a, p, q, reverse=reverse)
+        _merge_sort(a, q + 1, r, reverse=reverse)
         _merge(a, p, q, r, reverse=reverse)
+
+
+def merge_sort(a, reverse=False):
+    _merge_sort(a, 0, len(a) - 1, reverse)
 
 
 def heap_sort(a, reverse=False):
     heap = (MinHeap if reverse else MaxHeap)(a)
 
-    for i in range(len(heap.A) - 1, 0, -1):
+    for i in range(heap.heap_size - 1, 0, -1):
         heap.A[0], heap.A[i] = heap.A[i], heap.A[0]
         heap.heap_size -= 1
-        heap.heapify(i)
+        heap.heapify(0)
 
-    return heap.A
+
+def _partition(a, p, r, reverse=False):
+    i = p - 1
+    for j in range(p, r):
+        compare = (a[j] > a[r]) if reverse else (a[j] < a[r])
+        if compare:
+            i += 1
+            a[i], a[j] = a[j], a[i]
+    a[i + 1], a[r] = a[r], a[i + 1]
+    return i + 1
+
+
+def _randomized_partition(a, p, r, reverse=False):
+    k = random.randint(p, r)
+    a[k], a[r] = a[r], a[k]
+    return _partition(a, p, r, reverse)
+
+
+def _quick_sort(a, p, r, reverse=False, randomized_partition=False):
+    if p < r:
+        q = _randomized_partition(a, p, r, reverse) if randomized_partition else _partition(a, p, r, reverse)
+        _quick_sort(a, p, q - 1, reverse)
+        _quick_sort(a, q + 1, r, reverse)
+
+
+def quick_sort(a, reverse=False, randomized_partition=False):
+    _quick_sort(a, 0, len(a) - 1, reverse, randomized_partition)
