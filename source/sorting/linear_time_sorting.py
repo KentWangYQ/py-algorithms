@@ -3,7 +3,7 @@
 
 def counting_sort(a, k, reverse=False):
     b = [0] * len(a)
-    c = [0] * k
+    c = [0] * (k + 1)
     for v in a:
         c[v] += 1
 
@@ -19,3 +19,33 @@ def counting_sort(a, k, reverse=False):
         c[v] -= 1
 
     return b
+
+
+def radix_sort(a, d, reverse=False):
+    def _counting_sort(_a, _digit, _k):
+        _b = [0] * len(_a)
+        _c = [0] * _k
+
+        for v in _digit:
+            _c[v] += 1
+
+        if reverse:
+            for _i in range(len(_c) - 2, -1, -1):
+                _c[_i] = _c[_i] + _c[_i + 1]
+        else:
+            for _i in range(1, len(_c)):
+                _c[_i] = _c[_i] + _c[_i - 1]
+
+        for _i in range(len(_a) - 1, -1, -1):
+            _b[_c[_digit[_i]] - 1] = _a[_i]
+            _c[_digit[_i]] -= 1
+
+        return _b
+
+    k = 10
+    for i in range(d - 1, -1, -1):
+        # 由低到高对数字的每一位进行稳定排序
+        # 此处使用计数排序，因为每位只有0-9是个可选项，非常适合进行计数排序
+        a = _counting_sort(a, [int(str(v).zfill(d)[i]) for v in a], k)
+
+    return a
