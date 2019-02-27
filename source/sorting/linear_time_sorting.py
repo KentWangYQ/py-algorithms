@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from source.sorting import comparison_sorting
+
 
 def counting_sort(a, k, reverse=False):
     b = [0] * len(a)
@@ -49,3 +51,16 @@ def radix_sort(a, d, reverse=False):
         a = _counting_sort(a, [int(str(v).zfill(d)[i]) for v in a], k)
 
     return a
+
+
+def bucket_sort(a, reverse=False):
+    n = len(a)
+    b = [[] for _ in range(n)]
+    for v in a:
+        b[int(n * v)].append(v)
+
+    for v in b:
+        if v and len(v) > 0:
+            comparison_sorting.insertion_sort(v)
+
+    return [u for v in (b[::-1] if reverse else b) if v and len(v) > 0 for u in (v[::-1] if reverse else v)]
