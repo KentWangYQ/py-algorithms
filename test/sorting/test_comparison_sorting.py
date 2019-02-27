@@ -12,15 +12,68 @@ class ComparisionSortTest(unittest.TestCase):
         self.a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
         self.b = copy.deepcopy(self.a)
 
-    def test_insertion_sort(self):
-        comparison_sorting.insertion_sort(self.b)
+    # region INSERTION SORT
+    # 直接插入排序测试
+    def test_straight_insertion_sort(self):
+        """
+        直接插入排序测试
+        :return:
+        """
+        comparison_sorting.straight_insertion_sort(self.b)
         list.sort(self.a)
-        self.assertEqual(self.a, self.b, 'The list is NOT sorted after insertion sort!')
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after straight insertion sort!')
 
-    def test_insertion_sort_reverse(self):
-        comparison_sorting.insertion_sort(a=self.b, reverse=True)
+    # 直接插入倒序排序测试
+    def test_straight_insertion_sort_reverse(self):
+        """
+        直接插入倒序排序测试
+        :return:
+        """
+        comparison_sorting.straight_insertion_sort(a=self.b, reverse=True)
         list.sort(self.a, reverse=True)
-        self.assertEqual(self.a, self.b, 'The list is NOT sorted after insertion sort reverse!')
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after straight insertion sort reverse!')
+
+    # 折半插入排序测试
+    def test_binary_insertion_sort(self):
+        """
+        折半插入排序测试
+        :return:
+        """
+        comparison_sorting.binary_insertion_sort(self.b)
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after binary insertion sort!')
+
+    # 折半插入倒序排序测试
+    def test_binary_insertion_sort_reverse(self):
+        """
+        折半插入倒序排序测试
+        :return:
+        """
+        comparison_sorting.binary_insertion_sort(self.b, True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after binary insertion sort reverse!')
+
+    # 2路插入排序测试
+    def test_two_way_insertion_sort(self):
+        """
+        2路插入排序测试
+        :return:
+        """
+        comparison_sorting.two_way_insertion_sort(self.b)
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after two way insertion sort!')
+
+    # 2路插入倒序排序测试
+    def test_two_way_insertion_sort_reverse(self):
+        """
+        2路插入倒序排序测试
+        :return:
+        """
+        comparison_sorting.two_way_insertion_sort(self.b, True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after two way insertion sort reverse!')
+
+    # endregion
 
     def test_merge_sort(self):
         comparison_sorting.merge_sort(self.b)
@@ -66,8 +119,11 @@ class ComparisionSortTest(unittest.TestCase):
         t = 1000
         a = [random.randint(t * -1, t) for _ in range(t)]
 
-        insertion_sort = copy.deepcopy(a)
-        comparison_sorting.insertion_sort(insertion_sort)
+        a_straight_insertion_sort = copy.deepcopy(a)
+        comparison_sorting.straight_insertion_sort(a_straight_insertion_sort)
+
+        a_two_way_insertion_sort = copy.deepcopy(a)
+        comparison_sorting.two_way_insertion_sort(a_two_way_insertion_sort)
 
         a_merge_sort = copy.deepcopy(a)
         comparison_sorting.merge_sort(a_merge_sort)
@@ -80,7 +136,8 @@ class ComparisionSortTest(unittest.TestCase):
 
         list.sort(a)
 
-        self.assertEqual(a, insertion_sort, 'The list is NOT sorted after insertion sort!')
+        self.assertEqual(a, a_straight_insertion_sort, 'The list is NOT sorted after straight insertion sort!')
+        self.assertEqual(a, a_two_way_insertion_sort, 'The list is NOT sorted after two way insertion sort!')
         self.assertEqual(a, a_merge_sort, 'The list is NOT sorted after merge sort!')
         self.assertEqual(a, a_heap_sort, 'The list is NOT sorted after heap sort!')
         self.assertEqual(a, a_quick_sort, 'The list is NOT sorted after quick sort!')
@@ -89,8 +146,11 @@ class ComparisionSortTest(unittest.TestCase):
         t = 1000
         a = [random.randint(t * -1, t) for _ in range(t)]
 
-        a_insertion_sort = copy.deepcopy(a)
-        comparison_sorting.insertion_sort(a_insertion_sort, reverse=True)
+        a_straight_insertion_sort = copy.deepcopy(a)
+        comparison_sorting.straight_insertion_sort(a_straight_insertion_sort, reverse=True)
+
+        a_two_way_insertion_sort = copy.deepcopy(a)
+        comparison_sorting.two_way_insertion_sort(a_two_way_insertion_sort, reverse=True)
 
         a_merge_sort = copy.deepcopy(a)
         comparison_sorting.merge_sort(a_merge_sort, reverse=True)
@@ -103,7 +163,8 @@ class ComparisionSortTest(unittest.TestCase):
 
         list.sort(a, reverse=True)
 
-        self.assertEqual(a, a_insertion_sort, 'The list is NOT sorted after insertion sort reverse!')
+        self.assertEqual(a, a_straight_insertion_sort, 'The list is NOT sorted after straight insertion sort reverse!')
+        self.assertEqual(a, a_two_way_insertion_sort, 'The list is NOT sorted after two way insertion sort reverse!')
         self.assertEqual(a, a_merge_sort, 'The list is NOT sorted after merge sort reverse!')
         self.assertEqual(a, a_heap_sort, 'The list is NOT sorted after heap sort reverse!')
         self.assertEqual(a, a_quick_sort, 'The list is NOT sorted after quick sort reverse!')

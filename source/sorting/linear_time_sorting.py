@@ -61,6 +61,6 @@ def bucket_sort(a, reverse=False):
 
     for v in b:
         if v and len(v) > 0:
-            comparison_sorting.insertion_sort(v)
+            comparison_sorting.straight_insertion_sort(v)
 
     return [u for v in (b[::-1] if reverse else b) if v and len(v) > 0 for u in (v[::-1] if reverse else v)]
