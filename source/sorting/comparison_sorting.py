@@ -262,29 +262,99 @@ def heap_sort(a, reverse=False):
         heap.heapify(0)
 
 
+# region QUICK SORT
+
+# 冒泡排序
+def bubble_sort(a, reverse=False):
+    """
+    冒泡排序
+    一趟的操作：
+    升序为例，按顺序比较相邻的两条记录，如果两者不是升序排列，则交换两记录。
+    一趟结束时，待排序列中最大的记录会沉底，下一趟则从待排序列中排除掉该记录。
+    直到待排序列只剩一条记录时，排序完成。
+    :param a:
+    :param reverse:
+    :return:
+    """
+    n = len(a)
+    for i in range(n - 1):
+        for j in range(0, n - i - 1):
+            if (a[j] < a[j + 1]) if reverse else (a[j] > a[j + 1]):
+                a[j], a[j + 1] = a[j + 1], a[j]
+
+
+# 分割待排记录
 def _partition(a, p, r, reverse=False):
-    i = p - 1
+    """
+    分割待排记录
+    将索引从p到r的记录，已a[r]为支点分割为独立的两部分，其中一部分的记录均小于另一部分。
+    :param a:
+    :param p:
+    :param r:
+    :param reverse:
+    :return:
+    """
+    i = p - 1  # 两部分支点，第一部分的最后一条记录
+    # 遍历待排记录，并将记录移动到所属的部分
     for j in range(p, r):
         compare = (a[j] > a[r]) if reverse else (a[j] < a[r])
         if compare:
-            i += 1
-            a[i], a[j] = a[j], a[i]
-    a[i + 1], a[r] = a[r], a[i + 1]
-    return i + 1
+            # 需要移动
+            i += 1  # 支点后移
+            a[i], a[j] = a[j], a[i]  # 移动记录
+    a[i + 1], a[r] = a[r], a[i + 1]  # 将最后一条记录(索引为r)与第二部分的第一个元素交换，r正式称为支点
+    return i + 1  # 返回支点索引
 
 
+# 随机分割
 def _randomized_partition(a, p, r, reverse=False):
-    k = random.randint(p, r)
+    """
+    随机分割
+    普通分割策略使用待排记录中的最后一条记录作为支点，如果分割后的两部分严重不平衡，会造成算法性能下降。
+    所以该方法使用随机选取支点记录的策略，使两部分平衡的概率稳定，进而使整个排序算法的性能稳定。
+    :param a:
+    :param p:
+    :param r:
+    :param reverse:
+    :return:
+    """
+    k = random.randint(p, r)  # 随机选取支点记录
     a[k], a[r] = a[r], a[k]
     return _partition(a, p, r, reverse)
 
 
+# 快速排序
 def _quick_sort(a, p, r, reverse=False, randomized_partition=False):
+    """
+    快速排序
+    计算支点索引，并递归排序前后两部分
+    :param a:
+    :param p:
+    :param r:
+    :param reverse:
+    :param randomized_partition:
+    :return:
+    """
     if p < r:
+        # 待排记录中有多于一条记录
+
+        # 获取支点索引
         q = _randomized_partition(a, p, r, reverse) if randomized_partition else _partition(a, p, r, reverse)
+
+        # 递归排序前后两部分
         _quick_sort(a, p, q - 1, reverse)
         _quick_sort(a, q + 1, r, reverse)
 
 
+# 快速排序封装方法
 def quick_sort(a, reverse=False, randomized_partition=False):
+    """
+    快速排序封装方法
+    :param a:
+    :param reverse:
+    :param randomized_partition:
+    :return:
+    """
     _quick_sort(a, 0, len(a) - 1, reverse, randomized_partition)
+
+# endregion

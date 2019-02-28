@@ -13,7 +13,7 @@ class ComparisionSortTest(unittest.TestCase):
         self.a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
         self.b = copy.deepcopy(self.a)
 
-    # region INSERTION SORT
+    # region INSERTION SORT TEST
     # 直接插入排序测试
     def test_straight_insertion_sort(self):
         """
@@ -24,10 +24,10 @@ class ComparisionSortTest(unittest.TestCase):
         list.sort(self.a)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after straight insertion sort!')
 
-    # 直接插入倒序排序测试
+    # 直接插入排序倒序测试
     def test_straight_insertion_sort_reverse(self):
         """
-        直接插入倒序排序测试
+        直接插入排序倒序测试
         :return:
         """
         comparison_sorting.straight_insertion_sort(a=self.b, reverse=True)
@@ -44,10 +44,10 @@ class ComparisionSortTest(unittest.TestCase):
         list.sort(self.a)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after binary insertion sort!')
 
-    # 折半插入倒序排序测试
+    # 折半插入排序倒序测试
     def test_binary_insertion_sort_reverse(self):
         """
-        折半插入倒序排序测试
+        折半插入排序倒序测试
         :return:
         """
         comparison_sorting.binary_insertion_sort(self.b, True)
@@ -64,10 +64,10 @@ class ComparisionSortTest(unittest.TestCase):
         list.sort(self.a)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after two way insertion sort!')
 
-    # 2路插入倒序排序测试
+    # 2路插入排序倒序测试
     def test_two_way_insertion_sort_reverse(self):
         """
-        2路插入倒序排序测试
+        2路插入排序倒序测试
         :return:
         """
         comparison_sorting.two_way_insertion_sort(self.b, True)
@@ -84,10 +84,10 @@ class ComparisionSortTest(unittest.TestCase):
         list.sort(self.a)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after link list insertion sort!')
 
-    # 表插入倒序排序测试
+    # 表插入排序倒序测试
     def test_list_insertion_sort_reverse(self):
         """
-        表插入倒序排序测试
+        表插入排序倒序测试
         :return:
         """
         comparison_sorting.list_insertion_sort(self.b, True)
@@ -120,10 +120,10 @@ class ComparisionSortTest(unittest.TestCase):
         list.sort(self.a)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after shell sort!')
 
-    # 希尔倒序排序测试
+    # 希尔排序倒序测试
     def test_shell_sort_reverse(self):
         """
-        希尔倒序排序测试
+        希尔排序倒序测试
         :return:
         """
         comparison_sorting.shell_sort(self.b, [6, 4, 2, 1], True)
@@ -131,6 +131,41 @@ class ComparisionSortTest(unittest.TestCase):
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after shell sort reverse!')
 
     # endregion
+
+    def test_merge(self):
+        p, q, r = 1, 5, 10
+        a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
+        lv = a[p:q + 1]
+        rv = a[q + 1:r + 1]
+        list.sort(lv)
+        list.sort(rv)
+        a[p:q + 1] = lv
+        a[q + 1:r + 1] = rv
+
+        actual = copy.deepcopy(a)
+        comparison_sorting._merge(actual, p, q, r)
+        expect = a[p:r + 1]
+        list.sort(expect)
+
+        self.assertEqual(expect, actual[p:r + 1], 'The %d to %d items in list is NOT sorted after merge!' % (p, r + 1))
+
+    def test_merge_reverse(self):
+        p, q, r = 1, 5, 10
+        a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
+        lv = a[p:q + 1]
+        rv = a[q + 1:r + 1]
+        list.sort(lv, reverse=True)
+        list.sort(rv, reverse=True)
+        a[p:q + 1] = lv
+        a[q + 1:r + 1] = rv
+
+        actual = copy.deepcopy(a)
+        comparison_sorting._merge(actual, p, q, r, reverse=True)
+        expect = a[p:r + 1]
+        list.sort(expect, reverse=True)
+
+        self.assertEqual(expect, actual[p:r + 1],
+                         'The %d to %d items in list is NOT sorted after merge reverse!' % (p, r + 1))
 
     def test_merge_sort(self):
         comparison_sorting.merge_sort(self.b)
@@ -152,25 +187,69 @@ class ComparisionSortTest(unittest.TestCase):
         list.sort(self.a, reverse=True)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after heap sort reverse!')
 
+    # region QUICK SORT TEST
+
+    # 冒泡排序测试
+    def test_bubble_sort(self):
+        """
+        冒泡排序测试
+        :return:
+        """
+        comparison_sorting.bubble_sort(self.b)
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after bubble sort!')
+
+    # 冒泡排序倒序测试
+    def test_bubble_sort_reverse(self):
+        """
+        冒泡排序倒序测试
+        :return:
+        """
+        comparison_sorting.bubble_sort(self.b, True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after bubble sort reverse!')
+
+    # 快速排序测试
     def test_quick_sort(self):
+        """
+        快速排序测试
+        :return:
+        """
         comparison_sorting.quick_sort(self.b)
         list.sort(self.a)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after quick sort!')
 
+    # 快速排序倒序测试
     def test_quick_sort_reverse(self):
+        """
+        快速排序倒序测试
+        :return:
+        """
         comparison_sorting.quick_sort(self.b, reverse=True)
         list.sort(self.a, reverse=True)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after quick sort reverse!')
 
+    # 快速排序随机分割策略测试
     def test_quick_sort_rd(self):
+        """
+        快速排序随机分割策略测试
+        :return:
+        """
         comparison_sorting.quick_sort(self.b, randomized_partition=True)
         list.sort(self.a)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after quick sort!')
 
+    # 快速排序随机分割策略倒序测试
     def test_quick_sort_reverse_rd(self):
+        """
+        快速排序随机分割策略倒序测试
+        :return:
+        """
         comparison_sorting.quick_sort(self.b, reverse=True, randomized_partition=True)
         list.sort(self.a, reverse=True)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after quick sort reverse!')
+
+    # endregion
 
     def test_sort_random_list(self):
         t = 1000
@@ -225,38 +304,3 @@ class ComparisionSortTest(unittest.TestCase):
         self.assertEqual(a, a_merge_sort, 'The list is NOT sorted after merge sort reverse!')
         self.assertEqual(a, a_heap_sort, 'The list is NOT sorted after heap sort reverse!')
         self.assertEqual(a, a_quick_sort, 'The list is NOT sorted after quick sort reverse!')
-
-    def test_merge(self):
-        p, q, r = 1, 5, 10
-        a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
-        lv = a[p:q + 1]
-        rv = a[q + 1:r + 1]
-        list.sort(lv)
-        list.sort(rv)
-        a[p:q + 1] = lv
-        a[q + 1:r + 1] = rv
-
-        actual = copy.deepcopy(a)
-        comparison_sorting._merge(actual, p, q, r)
-        expect = a[p:r + 1]
-        list.sort(expect)
-
-        self.assertEqual(expect, actual[p:r + 1], 'The %d to %d items in list is NOT sorted after merge!' % (p, r + 1))
-
-    def test_merge_reverse(self):
-        p, q, r = 1, 5, 10
-        a = [3, 2, -20, 309, -987, 2, 487, -20, 90, -5, 0, 98]
-        lv = a[p:q + 1]
-        rv = a[q + 1:r + 1]
-        list.sort(lv, reverse=True)
-        list.sort(rv, reverse=True)
-        a[p:q + 1] = lv
-        a[q + 1:r + 1] = rv
-
-        actual = copy.deepcopy(a)
-        comparison_sorting._merge(actual, p, q, r, reverse=True)
-        expect = a[p:r + 1]
-        list.sort(expect, reverse=True)
-
-        self.assertEqual(expect, actual[p:r + 1],
-                         'The %d to %d items in list is NOT sorted after merge reverse!' % (p, r + 1))
