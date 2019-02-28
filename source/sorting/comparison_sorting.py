@@ -184,6 +184,42 @@ def list_insertion_sort(a, reverse=False):
         c = sl[c].next
 
 
+def _shell_insert(a, dk, reverse=False):
+    """
+    希尔插入
+    希尔排序的辅助方法，完成一趟排序操作
+    对每个分组内的记录，分别进行直接插入排序
+    :param a:
+    :param dk:
+    :param reverse:
+    :return:
+    """
+    for i in range(dk, len(a)):
+        j = i - dk
+        while j >= 0 and (a[i] > a[j] if reverse else a[i] < a[j]):
+            a[i], a[j] = a[j], a[i]
+            i, j = j, j - dk
+
+
+# 希尔排序
+def shell_sort(a, dlta, reverse=False):
+    """
+    希尔排序(Shell Sort)
+    又称“缩小增量排序(Diminishing Increment Sort)”
+    直接插入排序在待排序列基本有序或记录较少时，效率非常高。希尔排序就是借助这个特点，
+    将待排序列分割成若干个子序列分别进行插入排序，待整个序列基本有序时，再对全体记录做一次直接插入排序。
+    通过多次由大到小的分割，逐趟进行希尔插入操作，直到间隔为1，也就是全体排序。
+    分割的方式为：增量为k，间隔为k的记录为一组
+    :param a:
+    :param dlta: 增加序列
+    :param reverse:
+    :return:
+    """
+    # 根据增量序列逐趟进行希尔插入操作
+    for dk in dlta:
+        _shell_insert(a, dk, reverse)
+
+
 # endregion
 
 def _merge(a, p, q, r, reverse=False):

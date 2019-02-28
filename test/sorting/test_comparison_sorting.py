@@ -110,6 +110,26 @@ class ComparisionSortTest(unittest.TestCase):
 
         self.assertEqual(expect, actual, 'The link list is NOT sorted after _arrange!')
 
+    # 希尔排序测试
+    def test_shell_sort(self):
+        """
+        希尔排序测试
+        :return:
+        """
+        comparison_sorting.shell_sort(self.b, [5, 3, 1])
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after shell sort!')
+
+    # 希尔倒序排序测试
+    def test_shell_sort_reverse(self):
+        """
+        希尔倒序排序测试
+        :return:
+        """
+        comparison_sorting.shell_sort(self.b, [6, 4, 2, 1], True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after shell sort reverse!')
+
     # endregion
 
     def test_merge_sort(self):
