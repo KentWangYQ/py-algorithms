@@ -5,6 +5,7 @@ import random
 import copy
 
 from source.sorting import comparison_sorting
+from source.sorting.comparison_sorting import SLNode
 
 
 class ComparisionSortTest(unittest.TestCase):
@@ -72,6 +73,42 @@ class ComparisionSortTest(unittest.TestCase):
         comparison_sorting.two_way_insertion_sort(self.b, True)
         list.sort(self.a, reverse=True)
         self.assertEqual(self.a, self.b, 'The list is NOT sorted after two way insertion sort reverse!')
+
+    # 表插入排序测试
+    def test_list_insertion_sort(self):
+        """
+        表插入排序测试
+        :return:
+        """
+        comparison_sorting.list_insertion_sort(self.b)
+        list.sort(self.a)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after link list insertion sort!')
+
+    # 表插入倒序排序测试
+    def test_list_insertion_sort_reverse(self):
+        """
+        表插入倒序排序测试
+        :return:
+        """
+        comparison_sorting.list_insertion_sort(self.b, True)
+        list.sort(self.a, reverse=True)
+        self.assertEqual(self.a, self.b, 'The list is NOT sorted after link list insertion sort reverse!')
+
+    # 重排链表测试
+    def test_arrange(self):
+        """
+        重排链表测试
+        :return:
+        """
+        _keys, _next = [float('inf'), 49, 38, 76, 13, 27], [4, 3, 1, 0, 5, 2]
+        sl = [SLNode(k, _next[i]) for i, k in enumerate(_keys)]
+        comparison_sorting._arrange(sl)
+        expect = _keys[1:]
+        list.sort(expect)
+
+        actual = [sln.rc for sln in sl[1:]]
+
+        self.assertEqual(expect, actual, 'The link list is NOT sorted after _arrange!')
 
     # endregion
 

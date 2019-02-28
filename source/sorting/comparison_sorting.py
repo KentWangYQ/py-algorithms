@@ -5,6 +5,8 @@ from source.tree.heap import MinHeap, MaxHeap
 
 
 # region INSERTION SORT
+
+# 直接插入排序
 def straight_insertion_sort(a, reverse=False):
     """
     直接插入排序
@@ -24,6 +26,7 @@ def straight_insertion_sort(a, reverse=False):
             j -= 1
 
 
+# 折半插入排序
 def binary_insertion_sort(a, reverse=False):
     """
     折半插入排序
@@ -55,6 +58,7 @@ def binary_insertion_sort(a, reverse=False):
         a[high + 1] = v
 
 
+# 2路插入排序
 def two_way_insertion_sort(a, reverse=False):
     """
     2路插入排序
@@ -99,6 +103,85 @@ def two_way_insertion_sort(a, reverse=False):
             a[n - 1 - i] = deque[(first + i + n) % n]
         else:
             a[i] = deque[(first + i + n) % n]
+
+
+# 链表结点
+class SLNode(object):
+    """
+    链表结点，用于表插入排序
+    """
+
+    def __init__(self, rc, _next):
+        self.rc = rc  # 记录值
+        self.next = _next  # 链接指针
+
+
+# 重排链表
+def _arrange(sl):
+    """
+    重排链表
+    表插入排序的辅助方法
+    顺序遍历有序链表，将链表中的第i个结点移动至数组的第i个分量中。
+    链表方便移动，但是无法实现高效查找；所以对链表进行重排，最终变成有序数据，进而支持高效查找。
+    :param sl:
+    :return:
+    """
+    p = sl[0].next  # 当前操作的结点
+    for i in range(1, len(sl) - 1):
+        q = sl[p].next  # 当前结点的下一个结点
+        '''
+        使用p的next来暂存交换后的下一个结点的实际位置
+        此处比较绕，当前结点p在与数组索引为i的结点k进行对调之后，k失去了原来的位置。
+        链表中k之前的结点k'的next依然是指向i，但这时候k'通过next已经无法找到k了，因为i位置现在存储的是结点p。
+        同时p因为已经被放置在了有序数组中的恰当位置，其next字段已经无用，所以我们使用p的next字段来指示当前结点k的实际位置。
+        当k'通过next访问下一个结点时，实际访问到的是结点p，我们判断结点p已经处在数组中的有序区域，因此继续访问next，
+        直到next不在有序数组范围，即为原链表实际的next位置。
+        '''
+        # 暂存k的位置
+        sl[p].next = p
+        # 结点交换
+        sl[i], sl[p] = sl[p], sl[i]
+        # 循环获取next的实际位置
+        while q <= i:
+            q = sl[q].next
+        # 指针后移
+        p = q
+
+
+# 表插入排序
+def list_insertion_sort(a, reverse=False):
+    """
+    表插入排序
+    插入排序的改进。普通插入排序使用数组来存储数据，无法避免移动记录。表插入排序改用链表来存储数据，完全避免的记录移动。
+    :param a:
+    :param reverse:
+    :return:
+    """
+    # 使用数组+链表结点来模拟链表
+    sl = [SLNode(None, None) for _ in range(len(a) + 1)]
+
+    # 首结点作为哨兵
+    sl[0].rc = float('-inf' if reverse else 'inf')
+    sl[0].next = 0
+
+    # 遍历原始数组，依次将记录插入链表
+    for i, v in enumerate(a):
+        i += 1
+        curr = 0
+        # 遍历链表，找到合适的插入位置
+        while v < sl[sl[curr].next].rc if reverse else v > sl[sl[curr].next].rc:
+            curr = sl[curr].next
+
+        # 向已排序链表中插入新记录
+        sl[i].rc = v
+        sl[i].next = sl[curr].next
+        sl[curr].next = i
+
+    c = sl[0].next
+    # 遍历已排序链表，反写会原始数组
+    for i in range(len(a)):
+        a[i] = sl[c].rc
+        c = sl[c].next
 
 
 # endregion
