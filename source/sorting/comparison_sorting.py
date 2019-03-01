@@ -222,45 +222,6 @@ def shell_sort(a, dlta, reverse=False):
 
 # endregion
 
-def _merge(a, p, q, r, reverse=False):
-    sentry = float('-inf') if reverse else float('inf')
-    l_a = [v for i, v in enumerate(a) if p <= i <= q]
-    l_a.append(sentry)
-
-    r_a = [v for i, v in enumerate(a) if q < i <= r]
-    r_a.append(sentry)
-
-    i, j, k = 0, 0, p
-    while l_a[i] is not sentry or r_a[j] is not sentry:
-        if l_a[i] > r_a[j] if reverse else l_a[i] < r_a[j]:
-            a[k] = l_a[i]
-            i += 1
-        else:
-            a[k] = r_a[j]
-            j += 1
-        k += 1
-
-
-def _merge_sort(a, p, r, reverse=False):
-    if p < r:
-        q = (r + p) // 2
-        _merge_sort(a, p, q, reverse=reverse)
-        _merge_sort(a, q + 1, r, reverse=reverse)
-        _merge(a, p, q, r, reverse=reverse)
-
-
-def merge_sort(a, reverse=False):
-    _merge_sort(a, 0, len(a) - 1, reverse)
-
-
-def heap_sort(a, reverse=False):
-    heap = (MinHeap if reverse else MaxHeap)(a)
-
-    for i in range(heap.heap_size - 1, 0, -1):
-        heap.A[0], heap.A[i] = heap.A[i], heap.A[0]
-        heap.heap_size -= 1
-        heap.heapify(0)
-
 
 # region QUICK SORT
 
@@ -357,4 +318,205 @@ def quick_sort(a, reverse=False, randomized_partition=False):
     """
     _quick_sort(a, 0, len(a) - 1, reverse, randomized_partition)
 
+
+# endregion
+
+
+# region SELECTION SORT
+
+# 简单选择排序
+def simple_selection_sort(a, reverse=False):
+    """
+    简单选择排序
+    实现最简单的选择排序
+    基本操作：每次选出待排序类中最小(或最大)的记录，移动至有序序列中；循环多趟直至最后一条记录。
+    :param a:
+    :param reverse:
+    :return:
+    """
+    n = len(a)
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            if (a[i] < a[j]) if reverse else (a[i] > a[j]):
+                a[i], a[j] = a[j], a[i]
+
+
+# 树形选择排序
+def tree_selection_sort(a):
+    """
+    树形选择排序
+    因为过程类似锦标赛制，又称锦标赛排序(Tournament Sort)。
+
+    是对“简单选择排序”的改进。简单选择排序主要操作是记录的对比，如果能减少对比，则可以提高效率
+
+    树形选择排序基本操作：对n个记录进行两两对比，然后其中1/2较小的记录再进行两两对比，如此反复，直至选出最小记录。
+    过程可用一棵完全二叉树表示。n条记录依次放入叶子结点，按如上规则生成二叉树。
+    获取第二小的记录：已知树根结点记录为最小记录，找到最小记录在叶节点中的位置，将其置为无穷大；
+    然后沿该结点到根结点的路径重新生成二叉树，则生成完毕之后，树根为第二小的记录；后续以此类推。
+
+    该排序方法有辅助空间较多和最大值进行多于比较等缺点，另一种选择排序：堆排序弥补了这些缺点。
+    所以树形选择排序只是一种过度，实现比较复杂，应用很少。
+    :param a:
+    :return:
+    """
+
+    # 树结点
+    class Node(object):
+        def __init__(self, key, parent=None, left=None, right=None):
+            self.key = key
+            self.parent = parent
+            self.left = left
+            self.right = right
+
+    # 哨兵值
+    sentry = float('inf')
+
+    # 根据待排序列生成二叉树
+    def generate_tree():
+        l1, l2 = [], []
+        # 生成叶子结点
+        for key in a:
+            l1.append(Node(key))
+
+        # 向上逐层生成，直至只剩一个结点，即为根结点
+        while len(l1) > 1:
+            # 如果结点数为奇数，追加一个凑为偶数个，方便二叉树生成
+            if len(l1) & 1:
+                l1.append(Node(sentry))
+
+            # 步进为2，两两对比选出父结点
+            for i in range(0, len(l1), 2):
+                node = Node(key=l1[i].key if (l1[i].key < l1[i + 1].key) else l1[i + 1].key, left=l1[i],
+                            right=l1[i + 1])
+                l1[i].parent = node
+                l1[i + 1].parent = node
+                l2.append(node)
+            l1, l2 = l2, []
+        # 最后一个结点即为根结点
+        return l1.pop()
+
+    # 迭代获取最小值
+    def get_extremum_from_tree():
+        node = tree_root
+        while node.key != sentry:
+            # 使用生成器函数来进行迭代
+            # 返回最小值后，将最小结点记录变为无穷大，重新生成二叉树
+            yield node.key
+            # 寻找最小记录所在的叶子结点
+            while node and node.left:
+                node = node.left if node.key == node.left.key else node.right
+            # 最小记录标记为无穷大
+            node.key = sentry
+
+            while node and node.parent:
+                node = node.parent
+                node.key = node.left.key if node.left.key < node.right.key else node.right.key
+        return
+
+    # 生成二叉树
+    tree_root = generate_tree()
+    # 迭代生成有序序列，并返回
+    return [v for v in get_extremum_from_tree()]
+
+
+# 堆排序
+def heap_sort(a, reverse=False):
+    """
+    堆排序
+    借助最大堆(或最小堆)的性质实现排序，是对“树形选择排序”的改进
+    基本操作：从堆的根结点获取最小记录，放入有序序列，剩余的序列重新建堆。以此类推，直至所有记录有序。
+    :param a:
+    :param reverse:
+    :return:
+    """
+    # 使用待排序列初始化最大堆(最小堆)
+    heap = (MinHeap if reverse else MaxHeap)(a)
+
+    for i in range(heap.heap_size - 1, 0, -1):
+        # 最小记录移动至序列尾部形成有序序列
+        heap.A[0], heap.A[i] = heap.A[i], heap.A[0]
+        # 堆元素减少
+        heap.heap_size -= 1
+        # 重新建堆
+        heap.heapify(0)
+
+
+# endregion
+
+
+# region MERGE SORT
+
+# 合并有序序列
+def _merge(a, p, q, r, reverse=False):
+    """
+    合并有序序列
+    将两个有序序列合并为一个新的有序序列
+    “归并排序”辅助方法
+    依次对比前后两部分的记录，按顺序合并进原序列
+    :param a:
+    :param p:
+    :param q:
+    :param r:
+    :param reverse:
+    :return:
+    """
+    # 哨兵
+    sentry = float('-inf') if reverse else float('inf')
+
+    # 获取前半部分有序序列
+    l_a = [v for i, v in enumerate(a) if p <= i <= q]
+    # 追加哨兵
+    l_a.append(sentry)
+
+    # 获取后半部分有序序列
+    r_a = [v for i, v in enumerate(a) if q < i <= r]
+    # 追加哨兵
+    r_a.append(sentry)
+
+    # 遍历l_a和l_b，对比两个序列中的记录，按顺序回写如原序列
+    i, j, k = 0, 0, p
+    while l_a[i] is not sentry or r_a[j] is not sentry:
+        if l_a[i] > r_a[j] if reverse else l_a[i] < r_a[j]:
+            a[k] = l_a[i]
+            i += 1
+        else:
+            a[k] = r_a[j]
+            j += 1
+        k += 1
+
+
+# 归并排序
+def _merge_sort(a, p, r, reverse=False):
+    """
+    归并排序
+    主要思想：将两个或两个以上的有序序列组合成一个新的有序序列
+    该方法实现的是2路归并排序。主要操作是，递归的将待排序类均分为两部分，
+    直到细分到每部分只有一条记录(一条记录天然有序)，然后逐层合并，最终得到有序序列。
+    :param a:
+    :param p:
+    :param r:
+    :param reverse:
+    :return:
+    """
+    if p < r:
+        # 均分待排序列
+        q = (r + p) // 2
+
+        # 递归排序前后两部分
+        _merge_sort(a, p, q, reverse=reverse)
+        _merge_sort(a, q + 1, r, reverse=reverse)
+
+        # 前后两部分分别有序后，合并之
+        _merge(a, p, q, r, reverse=reverse)
+
+
+# 归并排序封装方法
+def merge_sort(a, reverse=False):
+    """
+    归并排序封装方法
+    :param a:
+    :param reverse:
+    :return:
+    """
+    _merge_sort(a, 0, len(a) - 1, reverse)
 # endregion
