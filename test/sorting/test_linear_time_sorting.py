@@ -22,12 +22,22 @@ class LinearTimeSortingTest(unittest.TestCase):
         list.sort(self.a, reverse=True)
         self.assertEqual(self.a, counting_sort_reverse_result, 'The list is NOT sorted after counting sort reverse!')
 
+    # 基数排序测试
     def test_radix_sort(self):
+        """
+        基数排序测试
+        :return:
+        """
         radix_sort_result = linear_time_sorting.radix_sort(self.a, self.d)
         list.sort(self.a)
         self.assertEqual(self.a, radix_sort_result, 'The list is NOT sorted after radix sort!')
 
+    # 基数排序倒序测试
     def test_radix_sort_reverse(self):
+        """
+        基数排序倒序测试
+        :return:
+        """
         radix_sort_reverse_result = linear_time_sorting.radix_sort(self.a, self.d, reverse=True)
         list.sort(self.a, reverse=True)
         self.assertEqual(self.a, radix_sort_reverse_result, 'The list is NOT sorted after radix sort reverse!')
