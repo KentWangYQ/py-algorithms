@@ -28,7 +28,7 @@ class WinnerTreeTest(unittest.TestCase):
         赢者测试
         :return:
         """
-        self.assertEqual(-987, self.winner_tree.winner(), 'The result is NOT the winner!')
+        self.assertEqual(-987, self.winner_tree.winner[1], 'The result is NOT the winner!')
 
     # 修改记录值测试
     def test_modify_key(self):
@@ -38,7 +38,7 @@ class WinnerTreeTest(unittest.TestCase):
         """
         self.winner_tree.modify_key(4, float('inf'))
         self.assertTrue(self.winner_tree.tree_check(), 'The tree is NOT a winner tree after modify key!')
-        self.assertEqual(-20, self.winner_tree.winner(), 'The result is NOT the winner!')
+        self.assertEqual(-20, self.winner_tree.winner[1], 'The result is NOT the winner!')
 
         self.winner_tree.modify_key(3, 1)
         self.assertTrue(self.winner_tree.tree_check(), 'The tree is NOT a winner tree after modify key!')
@@ -68,7 +68,7 @@ class LoserTreeTest(unittest.TestCase):
         :return:
         """
         expect = -987
-        actual = self.loser_tree.winner
+        _, actual = self.loser_tree.winner
         self.assertEqual(expect, actual, 'The actual is NOT the winner of tree!')
 
     # 修改记录值测试
@@ -79,4 +79,4 @@ class LoserTreeTest(unittest.TestCase):
         """
         self.loser_tree.modify_key(4, 1)
         self.assertTrue(self.loser_tree.tree_check(), 'The tree is NOT a loser tree after modify key!')
-        self.assertEqual(-20, self.loser_tree.winner, 'The result is NOT the winner of tree!')
+        self.assertEqual(-20, self.loser_tree.winner[1], 'The result is NOT the winner of tree!')

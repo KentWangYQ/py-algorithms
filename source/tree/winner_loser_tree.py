@@ -87,12 +87,13 @@ class WinnerTree(CompleteBinaryTree):
                 break
             parent = self.parent(parent)  # 指针上移至父结点
 
+    @property
     def winner(self):
         """
         赢者树的赢者
         :return:
         """
-        return self.leaves[self.wt[0]]
+        return self.wt[0], self.leaves[self.wt[0]]
 
     def tree_check(self):
         """
@@ -141,7 +142,7 @@ class LoserTree(CompleteBinaryTree):
         - 只读属性。
         :return: 返回真实值
         """
-        return self.leaves[self._winner]
+        return self._winner, self.leaves[self._winner]
 
     def __init__(self, a, match=None, extremum=None):
         if match:
