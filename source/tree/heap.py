@@ -2,19 +2,10 @@
 
 from abc import ABCMeta, abstractmethod
 
+from .complete_binary_tree import CompleteBinaryTree
 
-class Heap(metaclass=ABCMeta):
-    @staticmethod
-    def parent(i):
-        return ((i + 1) >> 1) - 1
 
-    @staticmethod
-    def left(i):
-        return ((i + 1) << 1) - 1
-
-    @staticmethod
-    def right(i):
-        return (i + 1) << 1
+class Heap(CompleteBinaryTree, metaclass=ABCMeta):
 
     A = []
     heap_size = 0
