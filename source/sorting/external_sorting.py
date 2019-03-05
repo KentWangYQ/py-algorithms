@@ -50,8 +50,8 @@ def replacement_selection_sort(a, k):
         6. 重复3～5，直到选不出新的MIN，此时得到一个初始归并段。
         7. 重复2～6，直到WA为空，此时得到全部的初始归并段。
     - 之后使用多路归并对初始归并段进行排序。
-    :param a:
-    :param k:
+    :param a: 待排序类
+    :param k: 内存工作区可容纳记录条数
     :return:
     """
 
