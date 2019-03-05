@@ -3,6 +3,7 @@
 from source.sorting import comparison_sorting
 
 
+# 计数排序
 def counting_sort(a, k, reverse=False):
     """
     计数排序
@@ -41,6 +42,7 @@ def counting_sort(a, k, reverse=False):
     return b
 
 
+# 基数排序
 def radix_sort(a, d, reverse=False):
     """
     基数排序
@@ -85,6 +87,7 @@ def radix_sort(a, d, reverse=False):
     return a
 
 
+# 链式基数排序
 def link_radix_sort(a, d, reverse=False):
     """
     链式基数排序
@@ -93,6 +96,7 @@ def link_radix_sort(a, d, reverse=False):
     本例中对数字进行排序，则RADIX=10
     :param a:
     :param d:
+    :param reverse:
     :return:
     """
 

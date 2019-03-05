@@ -4,6 +4,7 @@ from .comparison_sorting import merge_sort
 from source.tree.winner_loser_tree import LoserTree
 
 
+# 多路平衡归并排序
 def multi_ways_balance_merge_sort(a):
     """
     多路平衡归并排序
@@ -36,6 +37,7 @@ def multi_ways_balance_merge_sort(a):
     return b  # 返回有序序列
 
 
+# 置换选择排序
 def replacement_selection_sort(a, k):
     """
     置换选择排序
