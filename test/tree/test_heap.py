@@ -47,8 +47,9 @@ class MaxHeapTest(unittest.TestCase):
         self.assertTrue(self.max_heap.heap_check(), 'The heap is NOT a max heap after extract key!')
 
     def test_increase_key(self):
-        self.max_heap.increase_key(4, 100)
-        self.assertEqual(4, self.max_heap.A.index(100), 'The new key is NOT at the right place after increase key!')
+        key = 400
+        self.max_heap.increase_key(4, key)
+        self.assertEqual(1, self.max_heap.A.index(key), 'The new key is NOT at the right place after increase key!')
         self.assertTrue(self.max_heap.heap_check(), 'The heap is NOT a max heap after increase key!')
 
     def test_insert(self):
