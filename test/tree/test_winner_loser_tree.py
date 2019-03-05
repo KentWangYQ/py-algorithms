@@ -52,7 +52,7 @@ class LoserTreeTest(unittest.TestCase):
         self.assertTrue(self.loser_tree.tree_check(), 'The tree is NOT a loser tree!')
 
     def test_custom_match_extremum(self):
-        loser_tree = LoserTree(self.a, match=lambda a, b: a >= b, extremum=float('-inf'))
+        loser_tree = LoserTree(self.a, match=lambda a, b: a >= b, extremum=float('inf'))
         self.assertTrue(loser_tree.tree_check(), 'The tree is NOT a loser tree!')
 
     def test_tree_check(self):

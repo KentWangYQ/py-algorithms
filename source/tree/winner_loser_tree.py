@@ -122,7 +122,7 @@ class LoserTree(CompleteBinaryTree):
     - 本实现中为了保持CompleteBinaryTree中的父子结点计算方法有效性，没有在输者树中增加结点，
       而是单独设置了一个属性来保存胜者。
     """
-    EXTREMUM = float('inf')  # 极值
+    EXTREMUM = float('-inf')  # 极值
     _winner = 0  # 赢者
 
     @staticmethod
@@ -152,8 +152,8 @@ class LoserTree(CompleteBinaryTree):
             # 自定义极值。注意，如果自定义比赛，则必须同时指定极值
             self.EXTREMUM = extremum
         self.K = len(a) - 1  # 输者树结点个数
-        # 叶节点，最后追加一个极值，辅助树生成
-        self.leaves = a + [-1 * self.EXTREMUM]
+        # 叶节点，最后追加一个极值(赢者值)，辅助树生成
+        self.leaves = a + [self.EXTREMUM]
         self.lt = [-1] * self.K  # 输者树
 
         # 构建输者树
