@@ -8,7 +8,7 @@ from source.sorting import external_sorting
 # 外部排序测试
 class ExternalSortingTest(unittest.TestCase):
     def setUp(self):
-        self.k = 6  # 假设内存工作区可容纳5条记录
+        self.k = 6  # 内存工作区可容纳记录条数
         self.a = [51, 49, 39, 46, 38, 29, 14, 61, 15, 30, 1, 48, 52, 3, 63, 27, 4, 13, 89, 24, 46, 58, 33, 76]  # 原始待排序列
         self.b = [self.a[i: i + self.k] for i in range(0, len(self.a), self.k)]  # 拆分归并段
 
@@ -22,7 +22,12 @@ class ExternalSortingTest(unittest.TestCase):
         list.sort(self.a)
         self.assertEqual(self.a, mwbms_result, 'The list is NOT sorted after multi-ways balance merge sort!')
 
+    # 置换选择排序
     def test_replacement_selection_sort(self):
+        """
+        置换选择排序
+        :return:
+        """
         replacement_selection_sort_result = external_sorting.replacement_selection_sort(self.a, self.k)
         list.sort(self.a)
         self.assertEqual(self.a, replacement_selection_sort_result,
