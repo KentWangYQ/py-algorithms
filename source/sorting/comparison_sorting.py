@@ -178,7 +178,7 @@ def list_insertion_sort(a, reverse=False):
         sl[curr].next = i
 
     c = sl[0].next
-    # 遍历已排序链表，反写会原始数组
+    # 遍历已排序链表，反写灰原始数组
     for i in range(len(a)):
         a[i] = sl[c].rc
         c = sl[c].next
