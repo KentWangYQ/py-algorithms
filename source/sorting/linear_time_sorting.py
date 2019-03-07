@@ -49,14 +49,21 @@ def radix_sort(a, d, reverse=False):
     基数排序实际是一种多关键字排序。使用稳定排序依次对关键字进行稳定排序，最终得到整体有序序列。
     根据使用关键字的顺序，分为“最高位优先(Most Significant Digit first, MSD)”和“最地位优先(Least Significant Digit first, LSD)”。使用时，两者稍有不同。
     本方法实现对数字的基数排序，数字的每一位作为一个关键字，使用LSD。对单个关键字使用“计数排序算法”进行排序。
-    :param a:
-    :param d:
+    :param a: 待排序列
+    :param d: 位数，即关键字个数
     :param reverse:
     :return:
     """
 
     # 计数排序，单关键字排序算法，具体参见“计数排序算法”
     def _counting_sort(_a, _digit, _k):
+        """
+        计数排序
+        :param _a: 待排序列
+        :param _digit: 关键字序列，与待排序列一致
+        :param _k: 关键字分布范围，默认0开始
+        :return:
+        """
         _b = [0] * len(_a)
         _c = [0] * _k
 
@@ -81,7 +88,7 @@ def radix_sort(a, d, reverse=False):
     for i in range(d - 1, -1, -1):
         # 由低到高对数字的每一位进行稳定排序
         # 此处使用计数排序，因为每位只有0-9是个可选项，非常适合进行计数排序
-        # 将待排记录统一成d为，不足d位的，前面补0
+        # 将待排记录统一成d位，不足d位的，前面补0
         a = _counting_sort(a, [int(str(v).zfill(d)[i]) for v in a], k)
 
     return a
