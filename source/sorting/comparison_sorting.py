@@ -336,9 +336,12 @@ def simple_selection_sort(a, reverse=False):
     """
     n = len(a)
     for i in range(n - 1):
+        k = i
         for j in range(i + 1, n):
-            if (a[i] < a[j]) if reverse else (a[i] > a[j]):
-                a[i], a[j] = a[j], a[i]
+            if (a[k] < a[j]) if reverse else (a[k] > a[j]):
+                k = j
+        if k != i:
+            a[k], a[i] = a[i], a[k]
 
 
 # 树形选择排序

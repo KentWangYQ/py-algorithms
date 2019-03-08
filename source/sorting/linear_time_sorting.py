@@ -115,7 +115,7 @@ def link_radix_sort(a, d, reverse=False):
 
     _SENTRY = Node(keys=[], _next=None)  # 哨兵
     _RADIX = 10  # 基数数域
-    f, e = None, None  # 基数中的头尾数组
+    f, e = None, None  # 基数中的头尾数组,分别用于记录分配到某个基数的记录链表的首尾
     r = _SENTRY  # 待排序列头
 
     def distribute(ki):
