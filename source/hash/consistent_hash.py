@@ -30,18 +30,18 @@ def normal_hash(node_count, item_count):
         moved_item_count += 0 if _id == new_id else 1
 
     avg_count = item_count / node_count
-    print(f'Avg item count on node: {avg_count}')
+    print('Avg item count on node: %.2f' % avg_count)
 
     max_count = max(node_item_count)
     over_per = (max_count - avg_count) / avg_count * 100
-    print(f'Most item node has {over_per:.2f}% over')
+    print('Most item node has %.2f%% over' % over_per)
 
     min_count = min(node_item_count)
     under_per = (min_count - avg_count) / avg_count * 100
-    print(f'Least item node has {under_per:.2f}% under')
+    print('Least item node has %.2f%% under' % under_per)
 
     moved_per = moved_item_count / item_count * 100
-    print(f'Item moved per after add one node: {moved_per:.2f}%')
+    print('Item moved per after add one node: %.2f%%' % moved_per)
 
 
 # 一致性Hash算法
@@ -83,18 +83,18 @@ def consistent_hash(node_count, item_count):
         moved_item_count += 0 if _idx == _idx_new else 1
 
     avg_count = item_count / node_count
-    print(f'Avg item count on node: {avg_count}')
+    print('Avg item count on node: %.2f' % avg_count)
 
     max_count = max(node_item_count)
     over_per = (max_count - avg_count) / avg_count * 100
-    print(f'Most item node has {over_per:.2f}% over')
+    print('Most item node has %.2f%% over' % over_per)
 
     min_count = min(node_item_count)
     under_per = (min_count - avg_count) / avg_count * 100
-    print(f'Least item node has {under_per:.2f}% under')
+    print('Least item node has %.2f%% under' % under_per)
 
     moved_per = moved_item_count / item_count * 100
-    print(f'Item moved per after add one node: {moved_per:.2f}%')
+    print('Item moved per after add one node: %.2f%%' % moved_per)
 
 
 # 一致性Hash算法(虚拟结点)
@@ -160,15 +160,15 @@ def consistent_hash_vnode(node_count, v, item_count):
         moved_item_count += 0 if node_id == node_id_new else 1
 
     avg_count = item_count / node_count
-    print(f'Avg item count on node: {avg_count}')
+    print('Avg item count on node: %.2f' % avg_count)
 
     max_count = max(node_item_count)
     over_per = (max_count - avg_count) / avg_count * 100
-    print(f'Most item node has {over_per:.2f}% over')
+    print('Most item node has %.2f%% over' % over_per)
 
     min_count = min(node_item_count)
     under_per = (min_count - avg_count) / avg_count * 100
-    print(f'Least item node has {under_per:.2f}% under')
+    print('Least item node has %.2f%% under' % under_per)
 
     moved_per = moved_item_count / item_count * 100
-    print(f'Item moved per after add one node: {moved_per:.2f}%')
+    print('Item moved per after add one node: %.2f%%' % moved_per)
